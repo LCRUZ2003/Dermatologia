@@ -1,0 +1,12 @@
+
+const express = require("express");
+const router = express.Router();
+
+const {
+    obtenerEstadisticas
+} = require("../controllers/dashboard.controller");
+
+// GET: Obtener estadísticas del dashboard
+router.get("/estadisticas", obtenerEstadisticas);
+
+module.exports = router;
