@@ -1,1 +1,309 @@
-<h1>Hola Mundo</h1>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dermatólogos | Dermavital</title>
+
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/dermatologos.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="sidebar-brand">
+            <img src="../../assets/img/logo.png" alt="Dermavital">
+            <span>ADMINISTRACIÓN</span>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <p class="nav-label">MENÚ PRINCIPAL</p>
+
+            <a href="../index.html" class="nav-item">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="citas.html" class="nav-item">
+                <i class="fa-solid fa-calendar-check"></i>
+                <span>Gestión de citas</span>
+            </a>
+
+            <p class="nav-label">GESTIÓN</p>
+
+            <a href="dermatologos.html" class="nav-item active">
+                <i class="fa-solid fa-user-doctor"></i>
+                <span>Dermatólogos</span>
+            </a>
+
+            <a href="especialidades.html" class="nav-item">
+                <i class="fa-solid fa-stethoscope"></i>
+                <span>Especialidades</span>
+            </a>
+
+            <a href="servicios.html" class="nav-item">
+                <i class="fa-solid fa-hand-holding-medical"></i>
+                <span>Servicios</span>
+            </a>
+
+            <a href="horarios.html" class="nav-item">
+                <i class="fa-solid fa-clock"></i>
+                <span>Horarios</span>
+            </a>
+
+            <p class="nav-label">INFORMACIÓN</p>
+
+            <a href="reportes.html" class="nav-item">
+                <i class="fa-solid fa-file-pdf"></i>
+                <span>Reportes</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+            <a href="../../index.html" class="nav-item">
+                <i class="fa-solid fa-house"></i>
+                <span>Ir al sitio web</span>
+            </a>
+        </div>
+
+    </aside>
+
+    <main class="main-content">
+
+        <!-- ENCABEZADO -->
+        <header class="topbar">
+            <div>
+                <h2>Dermatólogos</h2>
+                <p>Administra los profesionales de la clínica</p>
+            </div>
+
+            <div class="admin-profile">
+                <div class="profile-icon">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+
+                <div>
+                    <strong>Administrador</strong>
+                    <small>Panel administrativo</small>
+                </div>
+            </div>
+        </header>
+
+        <section class="page-content">
+
+            <!-- BANNER -->
+            <div class="page-banner">
+                <div>
+                    <h2>Gestión de dermatólogos</h2>
+                    <p>Registra y administra los profesionales que forman parte de Dermavital.</p>
+                </div>
+
+                <i class="fas fa-user-doctor"></i>
+            </div>
+
+            <!-- ESTADÍSTICAS -->
+            <div class="section-heading">
+                <div>
+                    <h3>Resumen de profesionales</h3>
+                    <p>Estado actual de los dermatólogos registrados</p>
+                </div>
+            </div>
+
+            <div class="doctor-stats">
+
+                <div class="stat-card">
+                    <div class="stat-icon total">
+                        <i class="fas fa-user-doctor"></i>
+                    </div>
+                    <div>
+                        <span>Total de dermatólogos</span>
+                        <h3 id="totalDermatologos">0</h3>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon completed">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div>
+                        <span>Profesionales activos</span>
+                        <h3 id="dermatologosActivos">0</h3>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon pending">
+                        <i class="fas fa-user-clock"></i>
+                    </div>
+                    <div>
+                        <span>Profesionales inactivos</span>
+                        <h3 id="dermatologosInactivos">0</h3>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- LISTADO -->
+            <section class="doctors-section">
+
+                <div class="doctors-heading">
+                    <div class="section-heading">
+                        <div>
+                            <h3>Profesionales registrados</h3>
+                            <p>Consulta y administra la información de los dermatólogos</p>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" id="btnNuevoDermatologo">
+                        <i class="fas fa-plus"></i>
+                        Nuevo dermatólogo
+                    </button>
+                </div>
+
+                <!-- FILTROS -->
+                <div class="doctor-filters">
+
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input
+                            type="text"
+                            id="buscarDermatologo"
+                            placeholder="Buscar por nombre o cédula..."
+                        >
+                    </div>
+
+                    <select id="filtroEstado">
+                        <option value="">Todos los estados</option>
+                        <option value="activo">Activos</option>
+                        <option value="inactivo">Inactivos</option>
+                    </select>
+
+                </div>
+
+                <!-- TABLA -->
+                <div class="table-container">
+
+                    <table class="doctors-table">
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Profesional</th>
+                                <th>Cédula</th>
+                                <th>Correo</th>
+                                <th>Teléfono</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tablaDermatologos">
+                            <tr>
+                                <td colspan="7" class="loading-message">
+                                    Cargando dermatólogos...
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <div class="table-footer">
+                    <span id="contadorDermatologos">Mostrando 0 profesionales</span>
+                </div>
+
+            </section>
+
+        </section>
+
+    </main>
+
+    <!-- MODAL DE REGISTRO Y EDICIÓN -->
+    <div class="modal-overlay" id="modalDermatologo">
+
+        <div class="doctor-modal">
+
+            <div class="modal-header">
+                <div>
+                    <h3 id="tituloModal">Nuevo dermatólogo</h3>
+                    <p>Completa la información del profesional</p>
+                </div>
+
+                <button type="button" class="btn-cerrar" id="cerrarModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="formDermatologo">
+
+                <input type="hidden" id="idDermatologo">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="nombres">Nombres</label>
+                        <input type="text" id="nombres" required maxlength="100">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="apellidos">Apellidos</label>
+                        <input type="text" id="apellidos" required maxlength="100">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cedula">Cédula</label>
+                        <input type="text" id="cedula" required maxlength="13"
+                            placeholder="000-0000000-0">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="correo">Correo electrónico</label>
+                        <input type="email" id="correo" required maxlength="150">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefono">Teléfono</label>
+                        <input type="tel" id="telefono" required maxlength="20">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="descripcion">Descripción profesional</label>
+                        <textarea id="descripcion" rows="3"
+                            placeholder="Experiencia, perfil o información adicional..."></textarea>
+                    </div>
+
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="cancelarModal">
+                        Cancelar
+                    </button>
+
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i>
+                        Guardar profesional
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <script src="../js/dermatologos.js"></script>
+
+</body>
+</html>

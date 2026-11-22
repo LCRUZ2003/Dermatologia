@@ -1,1 +1,139 @@
-<h1>Hola Mundo</h1>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes | Dermavital</title>
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/reportes.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+        <img src="../../assets/img/logo.png" alt="Dermavital">
+        <span>ADMINISTRACIÓN</span>
+    </div>
+    <nav class="sidebar-nav">
+        <p class="nav-label">MENÚ PRINCIPAL</p>
+        <a href="../index.html" class="nav-item"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
+        <a href="citas.html" class="nav-item"><i class="fa-solid fa-calendar-check"></i><span>Gestión de citas</span></a>
+        <p class="nav-label">GESTIÓN</p>
+        <a href="dermatologos.html" class="nav-item"><i class="fa-solid fa-user-doctor"></i><span>Dermatólogos</span></a>
+        <a href="especialidades.html" class="nav-item"><i class="fa-solid fa-stethoscope"></i><span>Especialidades</span></a>
+        <a href="servicios.html" class="nav-item"><i class="fa-solid fa-hand-holding-medical"></i><span>Servicios</span></a>
+        <a href="horarios.html" class="nav-item"><i class="fa-solid fa-clock"></i><span>Horarios</span></a>
+        <p class="nav-label">INFORMACIÓN</p>
+        <a href="reportes.html" class="nav-item active"><i class="fa-solid fa-file-pdf"></i><span>Reportes</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+        <a href="../../index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Ir al sitio web</span></a>
+    </div>
+</aside>
+
+<main class="main-content">
+    <header class="topbar">
+        <div>
+            <h2>Reportes</h2>
+            <p>Consulta y genera informes administrativos</p>
+        </div>
+        <div class="admin-profile">
+            <div class="profile-icon"><i class="fas fa-user-shield"></i></div>
+            <div><strong>Administrador</strong><small>Panel administrativo</small></div>
+        </div>
+    </header>
+
+    <section class="page-content">
+        <div class="page-banner">
+            <div>
+                <h2>Reportes administrativos</h2>
+                <p>Obtén información organizada sobre las actividades y operaciones de Dermavital.</p>
+            </div>
+            <i class="fas fa-file-chart-column"></i>
+        </div>
+
+        <section class="report-generator">
+            <div class="section-heading">
+                <div>
+                    <h3>Generar reporte</h3>
+                    <p>Selecciona el tipo de información que deseas consultar</p>
+                </div>
+            </div>
+
+            <div class="report-filters">
+                <div class="form-group">
+                    <label for="tipoReporte">Tipo de reporte</label>
+                    <select id="tipoReporte">
+                        <option value="citas">Reporte de citas</option>
+                        <option value="dermatologos">Reporte de dermatólogos</option>
+                        <option value="servicios">Reporte de servicios</option>
+                        <option value="especialidades">Reporte de especialidades</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="grupoDesde">
+                    <label for="fechaDesde">Desde</label>
+                    <input type="date" id="fechaDesde">
+                </div>
+
+                <div class="form-group" id="grupoHasta">
+                    <label for="fechaHasta">Hasta</label>
+                    <input type="date" id="fechaHasta">
+                </div>
+
+                <div class="form-group" id="grupoEstado">
+                    <label for="estadoReporte">Estado de la cita</label>
+                    <select id="estadoReporte">
+                        <option value="">Todos los estados</option>
+                        <option value="PENDIENTE">Pendiente</option>
+                        <option value="CONFIRMADA">Confirmada</option>
+                        <option value="COMPLETADA">Completada</option>
+                        <option value="CANCELADA">Cancelada</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="report-actions">
+                <button class="btn-primary" id="btnGenerar">
+                    <i class="fas fa-magnifying-glass"></i> Generar reporte
+                </button>
+                <button class="btn-secondary" id="btnLimpiar">
+                    <i class="fas fa-eraser"></i> Limpiar filtros
+                </button>
+            </div>
+        </section>
+
+        <section class="report-results" id="seccionResultados">
+
+            <div class="results-heading">
+                <div>
+                    <h3 id="tituloResultado">Reporte de citas</h3>
+                    <p id="subtituloResultado">Resultados de demostración</p>
+                </div>
+                <button class="btn-primary" id="btnImprimir">
+                    <i class="fas fa-print"></i> Imprimir / Guardar PDF
+                </button>
+            </div>
+
+            <div class="report-stats" id="estadisticasReporte"></div>
+
+            <div class="report-table-container">
+                <table class="report-table">
+                    <thead id="encabezadoReporte"></thead>
+                    <tbody id="cuerpoReporte"></tbody>
+                </table>
+            </div>
+
+            <div class="table-footer" id="contadorReporte">0 resultados</div>
+        </section>
+    </section>
+</main>
+
+<script src="../js/reportes.js"></script>
+</body>
+</html>

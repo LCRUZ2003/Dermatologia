@@ -1,0 +1,155 @@
+
+/* REPORTES - DERMAVITAL */
+
+.page-content { padding: 26px 28px; background: #F9FAFB; min-height: calc(100vh - 70px); }
+
+.page-banner {
+    background: linear-gradient(110deg, #1E4D3B, #0D9488);
+    color: white; padding: 27px 25px; border-radius: 12px;
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px;
+}
+.page-banner h2 { font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 7px; }
+.page-banner p { font-size: 13px; opacity: .9; }
+.page-banner > i { font-size: 38px; color: #D1FAE5; margin-right: 12px; }
+
+.section-heading { margin-bottom: 20px; }
+.section-heading h3 { color: #1F2937; font-size: 17px; margin-bottom: 4px; }
+.section-heading p { color: #64748B; font-size: 12px; }
+
+/* FILTROS */
+
+.report-generator, .report-results {
+    background: white;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 25px;
+}
+
+.report-filters {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.form-group { display: flex; flex-direction: column; gap: 7px; }
+.form-group label { color: #374151; font-size: 12px; font-weight: 600; }
+
+.form-group input, .form-group select {
+    width: 100%;
+    height: 41px;
+    border: 1px solid #E5E7EB;
+    border-radius: 7px;
+    padding: 0 11px;
+    background: white;
+    color: #1F2937;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    outline: none;
+}
+
+.form-group input:focus, .form-group select:focus { border-color: #0D9488; }
+
+.report-actions { display: flex; gap: 10px; margin-top: 22px; }
+
+.btn-primary, .btn-secondary {
+    border-radius: 7px;
+    padding: 11px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: .2s;
+}
+
+.btn-primary { border: none; background: #0D9488; color: white; }
+.btn-primary:hover { background: #0F766E; }
+
+.btn-secondary { border: 1px solid #E5E7EB; background: white; color: #475569; }
+.btn-secondary:hover { background: #F9FAFB; }
+
+/* RESULTADOS */
+
+.results-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 22px;
+}
+
+.results-heading h3 { color: #1F2937; font-size: 17px; margin-bottom: 5px; }
+.results-heading p { color: #64748B; font-size: 12px; }
+
+.report-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 23px;
+}
+
+.report-stat {
+    background: #EDF5F2;
+    border: 1px solid #DCEBE5;
+    border-radius: 9px;
+    padding: 16px;
+}
+
+.report-stat span { color: #64748B; font-size: 11px; }
+.report-stat h3 { color: #1E4D3B; font-size: 22px; margin-top: 6px; }
+
+.report-table-container { width: 100%; overflow-x: auto; }
+.report-table { width: 100%; border-collapse: collapse; min-width: 650px; }
+
+.report-table th {
+    background: #EDF5F2;
+    color: #1E4D3B;
+    font-size: 11px;
+    text-align: left;
+    padding: 14px 12px;
+    white-space: nowrap;
+}
+
+.report-table td {
+    padding: 13px 12px;
+    border-bottom: 1px solid #E5E7EB;
+    color: #475569;
+    font-size: 11px;
+}
+
+.report-table tbody tr:hover { background: #F9FAFB; }
+.report-empty { text-align: center; padding: 28px !important; color: #64748B !important; }
+.table-footer { padding-top: 16px; color: #64748B; font-size: 11px; }
+
+/* IMPRESIÓN */
+
+@media print {
+    body { background: white; }
+    .sidebar, .topbar, .page-banner, .report-generator,
+    .results-heading button { display: none !important; }
+    .main-content { margin: 0 !important; width: 100% !important; }
+    .page-content { padding: 0 !important; }
+    .report-results { border: none; padding: 0; }
+    .report-table { min-width: 100%; }
+    .report-table th, .report-table td { font-size: 10px; }
+}
+
+@media (max-width: 1000px) {
+    .report-filters { grid-template-columns: repeat(2, 1fr); }
+    .report-stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 650px) {
+    .page-content { padding: 18px 14px; }
+    .page-banner { padding: 20px; }
+    .page-banner h2 { font-size: 20px; }
+    .report-filters, .report-stats { grid-template-columns: 1fr; }
+    .report-generator, .report-results { padding: 15px; }
+    .results-heading { align-items: flex-start; flex-direction: column; }
+    .report-actions { flex-direction: column; }
+    .report-actions button { width: 100%; }
+}

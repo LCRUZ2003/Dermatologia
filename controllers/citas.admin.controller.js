@@ -2,20 +2,37 @@
 const pool = require("../config/db");
 
 // Consulta base para mostrar la información de las citas
+
+// Consulta base para mostrar la información completa de las citas
 const consultaCitas = `
     SELECT
         c.*,
+
+        -- Información del cliente
+        u.nombre_usuario,
+        u.correo_usuario,
+
+        -- Información del dermatólogo
         d.nombres AS nombre_dermatologo,
         d.apellidos AS apellido_dermatologo,
+
+        -- Información del servicio
         s.nombre AS nombre_servicio,
         s.precio AS precio_servicio,
         s.duracion_minutos
+
     FROM citas c
+
+    INNER JOIN usuarios u
+        ON c.id_usuario = u.id_usuario
+
     INNER JOIN dermatologos d
         ON c.id_dermatologo = d.id_dermatologo
+
     INNER JOIN servicios s
         ON c.id_servicio = s.id_servicio
 `;
+
 
 // ========================================
 // CONSULTAR TODAS LAS CITAS
