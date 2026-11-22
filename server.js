@@ -26,6 +26,7 @@ const horariosRoutes = require("./routes/horarios.routes");
 const citasAdminRoutes = require("./routes/citas.admin.routes"); 
 const dashboardRoutes = require("./routes/dashboard.routes");
 const reportesRoutes = require("./routes/reportes.routes");
+const path = require("path");
 
 // Registrar rutas de la API
 app.use("/api/dermatologos", dermatologosRoutes); 
@@ -35,6 +36,7 @@ app.use("/api/horarios", horariosRoutes);
 app.use("/api/admin/citas", citasAdminRoutes);
 app.use("/api/admin/dashboard", dashboardRoutes); 
 app.use("/api/admin/reportes", reportesRoutes); 
+app.use(express.static(path.join(__dirname, "frontend"))); 
 
 // Página principal
 // Utilizar las rutas de usuarios

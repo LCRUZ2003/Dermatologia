@@ -1,0 +1,248 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel administrativo | Dermavital</title>
+
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <img src="../assets/img/logo.png" alt="Dermavital">
+            <span>ADMINISTRACIÓN</span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <p class="nav-label">MENÚ PRINCIPAL</p>
+
+            <a href="index.html" class="nav-item active">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="pages/citas.html" class="nav-item">
+                <i class="fa-solid fa-calendar-check"></i>
+                <span>Gestión de citas</span>
+            </a>
+
+            <p class="nav-label">GESTIÓN</p>
+
+            <a href="pages/dermatologos.html" class="nav-item">
+                <i class="fa-solid fa-user-doctor"></i>
+                <span>Dermatólogos</span>
+            </a>
+
+            <a href="pages/especialidades.html" class="nav-item">
+                <i class="fa-solid fa-stethoscope"></i>
+                <span>Especialidades</span>
+            </a>
+
+            <a href="pages/servicios.html" class="nav-item">
+                <i class="fa-solid fa-hand-holding-medical"></i>
+                <span>Servicios</span>
+            </a>
+
+            <a href="pages/horarios.html" class="nav-item">
+                <i class="fa-solid fa-clock"></i>
+                <span>Horarios</span>
+            </a>
+
+            <p class="nav-label">INFORMACIÓN</p>
+
+            <a href="pages/reportes.html" class="nav-item">
+                <i class="fa-solid fa-file-pdf"></i>
+                <span>Reportes</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <a href="../index.html" class="nav-item">
+                <i class="fa-solid fa-house"></i>
+                <span>Ir al sitio web</span>
+            </a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div class="page-heading">
+                <h1>Dashboard</h1>
+                <p>Resumen general de Dermavital</p>
+            </div>
+
+            <div class="admin-profile">
+                <div class="profile-icon">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <div>
+                    <strong>Administrador</strong>
+                    <span>Panel administrativo</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="dashboard-content">
+
+            <div class="welcome-section">
+                <div>
+                    <h2>Bienvenido al panel administrativo</h2>
+                    <p>Desde aquí puedes supervisar y gestionar las operaciones de la clínica.</p>
+                </div>
+                <span class="welcome-icon">
+                    <i class="fa-solid fa-heart-pulse"></i>
+                </span>
+            </div>
+
+            <div class="section-heading">
+                <div>
+                    <h2>Resumen general</h2>
+                    <p>Indicadores principales del sistema</p>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <article class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="fa-solid fa-calendar-check"></i>
+                    </div>
+                    <div>
+                        <span>Total de citas</span>
+                        <h3 id="totalCitas">0</h3>
+                    </div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-icon orange">
+                        <i class="fa-solid fa-hourglass-half"></i>
+                    </div>
+                    <div>
+                        <span>Citas pendientes</span>
+                        <h3 id="citasPendientes">0</h3>
+                    </div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-icon blue">
+                        <i class="fa-solid fa-user-doctor"></i>
+                    </div>
+                    <div>
+                        <span>Dermatólogos activos</span>
+                        <h3 id="dermatologosActivos">0</h3>
+                    </div>
+                </article>
+
+                <article class="stat-card">
+                    <div class="stat-icon purple">
+                        <i class="fa-solid fa-hand-holding-medical"></i>
+                    </div>
+                    <div>
+                        <span>Servicios activos</span>
+                        <h3 id="serviciosActivos">0</h3>
+                    </div>
+                </article>
+            </div>
+
+            <div class="section-heading">
+                <div>
+                    <h2>Estado de las citas</h2>
+                    <p>Distribución actual de las citas registradas</p>
+                </div>
+            </div>
+
+            <div class="status-grid">
+                <article class="status-card">
+                    <span class="status-dot pending"></span>
+                    <div>
+                        <p>Pendientes</p>
+                        <h3 id="estadoPendientes">0</h3>
+                    </div>
+                </article>
+
+                <article class="status-card">
+                    <span class="status-dot confirmed"></span>
+                    <div>
+                        <p>Confirmadas</p>
+                        <h3 id="estadoConfirmadas">0</h3>
+                    </div>
+                </article>
+
+                <article class="status-card">
+                    <span class="status-dot completed"></span>
+                    <div>
+                        <p>Completadas</p>
+                        <h3 id="estadoCompletadas">0</h3>
+                    </div>
+                </article>
+
+                <article class="status-card">
+                    <span class="status-dot cancelled"></span>
+                    <div>
+                        <p>Canceladas</p>
+                        <h3 id="estadoCanceladas">0</h3>
+                    </div>
+                </article>
+            </div>
+
+            <div class="section-heading">
+                <div>
+                    <h2>Accesos rápidos</h2>
+                    <p>Accede directamente a las principales funciones</p>
+                </div>
+            </div>
+
+            <div class="quick-grid">
+                <a href="pages/citas.html" class="quick-card">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <div>
+                        <h3>Gestionar citas</h3>
+                        <p>Consultar y administrar citas</p>
+                    </div>
+                    <i class="fa-solid fa-arrow-right arrow"></i>
+                </a>
+
+                <a href="pages/dermatologos.html" class="quick-card">
+                    <i class="fa-solid fa-user-doctor"></i>
+                    <div>
+                        <h3>Dermatólogos</h3>
+                        <p>Administrar profesionales</p>
+                    </div>
+                    <i class="fa-solid fa-arrow-right arrow"></i>
+                </a>
+
+                <a href="pages/servicios.html" class="quick-card">
+                    <i class="fa-solid fa-hand-holding-medical"></i>
+                    <div>
+                        <h3>Servicios</h3>
+                        <p>Gestionar servicios y precios</p>
+                    </div>
+                    <i class="fa-solid fa-arrow-right arrow"></i>
+                </a>
+
+                <a href="pages/reportes.html" class="quick-card">
+                    <i class="fa-solid fa-file-pdf"></i>
+                    <div>
+                        <h3>Reportes</h3>
+                        <p>Generar informes en PDF</p>
+                    </div>
+                    <i class="fa-solid fa-arrow-right arrow"></i>
+                </a>
+            </div>
+
+        </section>
+    </main>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>
