@@ -360,9 +360,55 @@ const reporteEspecialidades = async (req, res) => {
     }
 };
 
+// ========================================
+// REPORTE DE CLIENTES
+// ========================================
+const reporteClientes = async (req, res) => {
+    try {
+        const resultado = await pool.query(`
+            SELECT
+                u.id_usuario,
+                u.nombre_usuario,
+                u.correo_usuario,
+                TO_CHAR(u.fecha_registro, 'DD/MM/YYYY') AS fecha_registro
+            FROM usuarios u
+            INNER JOIN roles r
+                ON u.id_rol = r.id_rol
+            WHERE r.codigo_rol = 'CLIENTE'
+            ORDER BY u.nombre_usuario ASC
+        `);
+
+        generarPDF(
+            res,
+            "reporte_clientes",
+            "REPORTE DE CLIENTES",
+            [
+                "ID",
+                "Nombre",
+                "Correo electrónico",
+                "Fecha de registro"
+            ],
+            resultado.rows.map(c => [
+                c.id_usuario,
+                c.nombre_usuario,
+                c.correo_usuario,
+                c.fecha_registro
+            ])
+        );
+
+    } catch (error) {
+        console.error("Error en reporte de clientes:", error.message);
+
+        res.status(500).json({
+            mensaje: "No fue posible generar el reporte de clientes."
+        });
+    }
+};
+
 module.exports = {
     reporteCitas,
     reporteDermatologos,
     reporteServicios,
-    reporteEspecialidades
+    reporteEspecialidades,
+    reporteClientes
 };

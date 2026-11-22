@@ -1,6 +1,8 @@
 
 const express = require("express"); 
 const router = express.Router();
+// Importar los middleware de autenticación
+const { verificarToken, verificarRol } = require("../middleware/auth.middleware");
 
 const {
     obtenerCitas,
@@ -9,9 +11,12 @@ const {
     obtenerCitasPorDermatologo,
     confirmarCita,
     actualizarCita,
-    obtenerCitasPendientes
+    obtenerCitasPendientes,
+    obtenerCitasPorCliente
 } = require("../controllers/citas.admin.controller");
 
+// Proteger todas las rutas administrativas
+router.use(verificarToken, verificarRol("ADMIN"));
 // GET: Consultar todas las citas
 router.get("/", obtenerCitas);
 
@@ -23,6 +28,9 @@ router.get("/fecha/:fecha", obtenerCitasPorFecha);
 
 // GET: Filtrar citas por dermatólogo
 router.get("/dermatologo/:id", obtenerCitasPorDermatologo);
+
+// GET: Consultar citas por cliente
+router.get("/cliente/:id", obtenerCitasPorCliente);
 
 // PATCH: Confirmar una cita
 router.patch("/:id/confirmar", confirmarCita);
