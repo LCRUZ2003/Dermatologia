@@ -32,7 +32,13 @@ const obtenerEstadisticas = async (req, res) => {
                  WHERE estado = TRUE) AS servicios_activos,
 
                 (SELECT COUNT(*) FROM especialidades
-                 WHERE estado = TRUE) AS especialidades_activas
+                 WHERE estado = TRUE) AS especialidades_activas,
+
+                 
+                (SELECT COUNT(*)
+                FROM usuarios u
+                INNER JOIN roles r ON u.id_rol = r.id_rol
+                WHERE r.codigo_rol = 'CLIENTE') AS total_clientes
         `);
 
         // Citas agrupadas por estado

@@ -600,6 +600,56 @@ const obtenerCitasPendientes = async (req, res) => {
 };
 
 
+
+// ========================================
+// CONSULTAR CITAS POR CLIENTE
+// ========================================
+const obtenerCitasPorCliente = async (req, res) => {
+    const { id } = req.params;
+
+    if (!Number.isInteger(Number(id)) || Number(id) <= 0) {
+        return res.status(400).json({
+            mensaje: "El ID del cliente no es válido."
+        });
+    }
+
+    try {
+        const resultado = await pool.query(
+            `SELECT
+                c.*,
+                u.nombre_usuario,
+                u.correo_usuario,
+                d.nombres AS nombre_dermatologo,
+                d.apellidos AS apellido_dermatologo,
+                s.nombre AS nombre_servicio,
+                s.precio AS precio_servicio,
+                s.duracion_minutos
+             FROM citas c
+             INNER JOIN usuarios u
+                ON c.id_usuario = u.id_usuario
+             INNER JOIN dermatologos d
+                ON c.id_dermatologo = d.id_dermatologo
+             INNER JOIN servicios s
+                ON c.id_servicio = s.id_servicio
+             WHERE c.id_usuario = $1
+             ORDER BY c.fecha_cita DESC, c.hora_cita DESC`,
+            [id]
+        );
+
+        res.json(resultado.rows);
+
+    } catch (error) {
+        console.error("Error al consultar citas por cliente:", error.message);
+
+        res.status(500).json({
+            mensaje: "Error al consultar las citas del cliente."
+        });
+    }
+};
+
+
+
+
 module.exports = {
     obtenerCitas,
     obtenerCitaPorId,
@@ -607,5 +657,6 @@ module.exports = {
     obtenerCitasPorDermatologo,
     confirmarCita,
     actualizarCita,
-    obtenerCitasPendientes
+    obtenerCitasPendientes,
+    obtenerCitasPorCliente
 };
