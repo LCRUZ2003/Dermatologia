@@ -1,0 +1,189 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Iniciar Sesión | Dermavital</title>
+
+    <!-- Fuentes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Estilos de autenticación -->
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+
+<body>
+
+    <!-- ENCABEZADO -->
+    <header class="auth-header">
+
+        <a href="../index.html" class="auth-logo">
+            <img src="../assets/img/logo.png" alt="Dermavital">
+        </a>
+
+        <nav class="auth-nav">
+            <a href="../index.html">Inicio</a>
+            <a href="../index.html#servicios">Servicios</a>
+            <a href="../index.html#nosotros">Nosotros</a>
+            <a href="../index.html#contacto">Contacto</a>
+        </nav>
+
+        <a href="registro.html" class="auth-login-link">
+            Registrarse
+        </a>
+
+    </header>
+
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="auth-main">
+
+        <!-- PANEL DE IMAGEN -->
+        <section class="auth-image">
+
+            <div class="auth-image-content">
+
+                <img src="../assets/img/skin-care2.jpg"
+                     alt="Logo Dermavital"
+                     class="auth-vertical-logo">
+
+            </div>
+
+        </section>
+
+
+        <!-- FORMULARIO DE LOGIN -->
+        <section class="auth-form-section">
+
+            <div class="auth-card">
+
+                <div class="auth-heading">
+
+                    <div class="auth-icon">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+
+                    <h1>Bienvenido de nuevo</h1>
+
+                    <p>
+                        Ingresa tus datos para acceder a tu cuenta.
+                    </p>
+
+                </div>
+
+
+                <!-- Mensajes -->
+                <div id="authMessage" class="auth-message"></div>
+
+
+                <form id="loginForm">
+
+                    <!-- Correo electrónico -->
+                    <div class="form-group">
+
+                        <label for="correo_usuario">
+                            Correo electrónico
+                        </label>
+
+                        <div class="input-container">
+
+                            <i class="fa-solid fa-envelope"></i>
+
+                            <input
+                                type="email"
+                                id="correo_usuario"
+                                name="correo_usuario"
+                                placeholder="Ingresa tu correo"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Contraseña -->
+                    <div class="form-group">
+
+                        <label for="password_usuario">
+                            Contraseña
+                        </label>
+
+                        <div class="input-container">
+
+                            <i class="fa-solid fa-lock"></i>
+
+                            <input
+                                type="password"
+                                id="password_usuario"
+                                name="password_usuario"
+                                placeholder="Ingresa tu contraseña"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="toggle-password"
+                                id="togglePassword"
+                            >
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Botón -->
+                    <button type="submit" class="auth-submit">
+
+                        <span>Iniciar sesión</span>
+
+                        <i class="fa-solid fa-arrow-right"></i>
+
+                    </button>
+
+                </form>
+
+
+                <!-- Pie del formulario -->
+                <div class="auth-footer">
+
+                    <p>
+                        ¿Todavía no tienes una cuenta?
+                        <a href="registro.html">Regístrate aquí</a>
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- PIE DE PÁGINA -->
+    <footer class="auth-page-footer">
+
+        <p>
+            © 2026 Dermavital. Todos los derechos reservados.
+        </p>
+
+    </footer>
+
+
+    <!-- JavaScript -->
+    <script src="js/login.js"></script>
+
+</body>
+</html>

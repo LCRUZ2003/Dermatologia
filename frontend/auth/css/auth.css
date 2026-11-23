@@ -1,0 +1,391 @@
+
+/* ========================================
+   ESTILOS DE AUTENTICACIÓN - DERMAVITAL
+======================================== */
+
+/* ========================================
+VARIABLES DE COLORES
+======================================== */
+
+:root {
+    --fondo: #F9FAFB;
+    --grafito: #1F2937;
+    --verde: #0D9488;
+    --verde-suave: #3B8270;
+    --verde-oscuro: #1E4D3B;
+    --menta: #EDF5F2;
+    --blanco: #FFFFFF;
+    --borde: #E5E7EB;
+    --gris: #6B7280;
+    --error: #DC2626;
+    --exito: #15803D;
+}
+
+/* ========================================
+CONFIGURACIÓN GENERAL
+======================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'DM Sans', sans-serif;
+    background-color: var(--fondo);
+    color: var(--grafito);
+    min-height: 100vh;
+}
+
+/* ========================================
+ENCABEZADO Y MENÚ
+======================================== */
+
+.auth-header {
+    width: 100%;
+    min-height: 85px;
+    padding: 15px 7%;
+    background-color: var(--blanco);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    border-bottom: 1px solid var(--borde);
+}
+
+.auth-logo img {
+    width: 145px;
+    height: auto;
+    display: block;
+}
+
+.auth-nav {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+.auth-nav a {
+    text-decoration: none;
+    color: #1E4D3B;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.auth-nav a:hover {
+    color: #1E4D3B;
+}
+
+.auth-login-link {
+    text-decoration: none;
+    color: var(--blanco);
+    background-color: var(--verde);
+    padding: 11px 22px;
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.auth-login-link:hover {
+    background-color: var(--verde-oscuro);
+}
+
+/* ========================================
+CONTENIDO PRINCIPAL
+======================================== */
+
+.auth-main {
+    min-height: calc(100vh - 155px);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 25px;
+    padding: 25px 6%;
+    background: linear-gradient(
+        135deg,
+        var(--fondo),
+        var(--menta)
+    );
+}
+
+/* ========================================
+ PANEL DE IMAGEN
+======================================== */
+
+.auth-image {
+    width: 85%;
+    height: 85%;
+    min-height: 0;
+    justify-self: center;
+    align-self: center;
+    border-radius: 18px;
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(20, 55, 47, 0.85),
+            rgba(20, 55, 47, 0.08)
+        ),
+        url("../assets/img/registro-dermavital.jpg")
+        center / cover no-repeat;
+
+    display: flex;
+    align-items: flex-end;
+    padding: 10px;
+}
+
+.auth-image-content {
+    color: var(--blanco);
+    width: 100%;
+    max-width: 700px;
+}
+
+/* Logo vertical */
+
+.auth-image-content .auth-vertical-logo {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 18px;
+    margin: 0 auto 10px;
+}
+
+/* ========================================
+ SECCIÓN DEL FORMULARIO
+======================================== */
+
+.auth-form-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* Tarjeta del formulario */
+
+.auth-card {
+    width: 100%;
+    max-width: 490px;
+    padding: 28px 35px;
+    background-color: var(--blanco);
+    border: 1px solid var(--borde);
+    border-radius: 16px;
+    box-shadow: 0 10px 35px rgba(31, 41, 55, 0.07);
+}
+
+/* ========================================
+ENCABEZADO DEL FORMULARIO
+======================================== */
+
+.auth-heading {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.auth-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 12px;
+    border-radius: 50%;
+    background-color: var(--menta);
+    color: var(--verde);
+    font-size: 20px;
+}
+
+.auth-heading h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 27px;
+    color: var(--verde-oscuro);
+    margin-bottom: 6px;
+}
+
+.auth-heading p {
+    color: var(--gris);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* ========================================
+ CAMPOS DEL FORMULARIO
+======================================== */
+
+.form-group {
+    margin-bottom: 13px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--grafito);
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 44px;
+    padding: 0 14px;
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    background-color: var(--blanco);
+    transition: border-color 0.3s ease,
+                box-shadow 0.3s ease;
+}
+
+.input-container:focus-within {
+    border-color: var(--verde);
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.10);
+}
+
+.input-container > i {
+    color: var(--gris);
+    font-size: 15px;
+    margin-right: 12px;
+}
+
+.input-container input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--grafito);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+}
+
+.input-container input::placeholder {
+    color: #9CA3AF;
+}
+
+/* ========================================
+MOSTRAR Y OCULTAR CONTRASEÑA
+======================================== */
+
+.toggle-password {
+    border: none;
+    background: transparent;
+    color: var(--gris);
+    cursor: pointer;
+    font-size: 15px;
+    padding: 5px;
+}
+
+.toggle-password:hover {
+    color: var(--verde);
+}
+
+/* ========================================
+MENSAJES
+======================================== */
+
+.auth-message {
+    display: none;
+    padding: 12px;
+    margin-bottom: 18px;
+    border-radius: 7px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.auth-message.error {
+    display: block;
+    color: var(--error);
+    background-color: #FEF2F2;
+    border: 1px solid #FECACA;
+}
+
+.auth-message.success {
+    display: block;
+    color: var(--exito);
+    background-color: #F0FDF4;
+    border: 1px solid #BBF7D0;
+}
+
+/* ========================================
+BOTÓN DE REGISTRO / LOGIN
+======================================== */
+
+.auth-submit {
+    width: 100%;
+    min-height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--verde);
+    color: var(--blanco);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease,
+                transform 0.2s ease;
+}
+
+.auth-submit:hover {
+    background-color: var(--verde-oscuro);
+    transform: translateY(-2px);
+}
+
+.auth-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ========================================
+PIE DEL FORMULARIO
+======================================== */
+
+.auth-footer {
+    margin-top: 17px;
+    padding-top: 15px;
+    border-top: 1px solid var(--borde);
+    text-align: center;
+}
+
+.auth-footer p {
+    color: var(--gris);
+    font-size: 14px;
+}
+
+.auth-footer a {
+    color: var(--verde);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.auth-footer a:hover {
+    color: var(--verde-oscuro);
+    text-decoration: underline;
+}
+
+/* ========================================
+ PIE DE PÁGINA
+======================================== */
+
+.auth-page-footer {
+    padding: 18px 15px;
+    text-align: center;
+    background-color: var(--blanco);
+    border-top: 1px solid var(--borde);
+}
+
+.auth-page-footer p {
+    color: var(--gris);
+    font-size: 12px;
+}

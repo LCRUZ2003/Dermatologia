@@ -5,56 +5,92 @@ require("dotenv").config();
 // Importar Express
 const express = require("express");
 
+// Importar CORS
+const cors = require("cors");
+
 // Importar la conexión con PostgreSQL
 const pool = require("./config/db");
+
 // Importar las rutas de usuarios
 const usuariosRoutes = require("./routes/usuarios.routes");
+
 // Importar las rutas de citas
 const citasRoutes = require("./routes/citas.routes");
 
-// Crear la aplicación
-const app = express();
-
-// Permitir recibir datos en formato JSON
-app.use(express.json());
-
-// Rutas
+// Importar las rutas del sistema
 const dermatologosRoutes = require("./routes/dermatologos.routes");
 const especialidadesRoutes = require("./routes/especialidades.routes");
 const serviciosRoutes = require("./routes/servicios.routes");
 const horariosRoutes = require("./routes/horarios.routes");
-const citasAdminRoutes = require("./routes/citas.admin.routes"); 
+const citasAdminRoutes = require("./routes/citas.admin.routes");
 const dashboardRoutes = require("./routes/dashboard.routes");
 const reportesRoutes = require("./routes/reportes.routes");
+
+// Importar Path
 const path = require("path");
 
-// Registrar rutas de la API
-app.use("/api/dermatologos", dermatologosRoutes); 
-app.use("/api/especialidades", especialidadesRoutes);
-app.use("/api/servicios", serviciosRoutes);
-app.use("/api/horarios", horariosRoutes); 
-app.use("/api/admin/citas", citasAdminRoutes);
-app.use("/api/admin/dashboard", dashboardRoutes); 
-app.use("/api/admin/reportes", reportesRoutes); 
-app.use(express.static(path.join(__dirname, "frontend"))); 
+// Crear la aplicación
+const app = express();
 
-// Página principal
-// Utilizar las rutas de usuarios
+// ========================================
+// CONFIGURACIONES DEL SERVIDOR
+// ========================================
+
+// Configuración de CORS
+app.use(cors({
+    origin: "http://127.0.0.1:5500",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
+// Permitir recibir datos en formato JSON
+app.use(express.json());
+
+// ========================================
+// REGISTRO DE RUTAS
+// ========================================
+
+// Rutas de dermatólogos
+app.use("/api/dermatologos", dermatologosRoutes);
+
+// Rutas de especialidades
+app.use("/api/especialidades", especialidadesRoutes);
+
+// Rutas de servicios
+app.use("/api/servicios", serviciosRoutes);
+
+// Rutas de horarios
+app.use("/api/horarios", horariosRoutes);
+
+// Rutas administrativas
+app.use("/api/admin/citas", citasAdminRoutes);
+app.use("/api/admin/dashboard", dashboardRoutes);
+app.use("/api/admin/reportes", reportesRoutes);
+
+// Rutas de usuarios
 app.use("/api/usuarios", usuariosRoutes);
-// Utilizar las rutas de cita
+
+// Rutas de citas
 app.use("/api/citas", citasRoutes);
+
+// Servir archivos del frontend
+app.use(express.static(path.join(__dirname, "frontend")));
 
 console.log("Rutas de usuarios cargadas correctamente");
 
-// Ruta principal de prueba
+// ========================================
+// RUTA PRINCIPAL
+// ========================================
+
 app.get("/", (req, res) => {
     res.json({
         mensaje: "Bienvenido al sistema de la Clínica Dermatológica"
     });
 });
 
-// Comprobar conexión con PostgreSQL
-// Comprobar el estado del servidor y la base de datos
+// ========================================
+// ESTADO DEL SERVIDOR Y BASE DE DATOS
+// ========================================
 
 app.get("/api/estado", async (req, res) => {
     try {
@@ -66,11 +102,7 @@ app.get("/api/estado", async (req, res) => {
         });
 
     } catch (error) {
-
-        console.error(error.message);
-
         console.error("Error de conexión:", error.message);
-
 
         res.status(500).json({
             servidor: "Funcionando",
@@ -79,10 +111,12 @@ app.get("/api/estado", async (req, res) => {
     }
 });
 
-// Iniciar servidor
+// ========================================
+// INICIAR SERVIDOR
+// ========================================
+
 const PORT = process.env.PORT || 3000;
 
-// Iniciar el servidor
 app.listen(PORT, () => {
     console.log(`Servidor ejecutándose en http://localhost:${PORT}`);
 });
