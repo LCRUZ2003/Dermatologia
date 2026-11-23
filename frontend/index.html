@@ -48,12 +48,30 @@
                 <a href="#servicios" class="nav-link">Servicios</a>
                 <a href="#contacto" class="nav-link">Contacto</a>
 
-                <a href="auth/login.html" class="login-link">
+
+                                <!-- OPCIONES DEL CLIENTE -->
+                <a href="citas/indexcitas.html" class="nav-link opcion-cliente" style="display: none;">
+                    Mi panel
+                </a>
+
+                <a href="citas/solicitarcita.html" class="nav-link opcion-cliente" style="display: none;">
+                    Solicitar cita
+                </a>
+
+                <a href="citas/miscitas.html" class="nav-link opcion-cliente" style="display: none;">
+                    Mis citas
+                </a>
+
+                <a href="auth/login.html" class="login-link" id="enlaceLogin">
                     Iniciar sesión
                 </a>
 
-                <a href="auth/registro.html" class="btn-primary">
-                    Agendar cita
+                <a href="auth/registro.html" class="btn-primary" id="enlaceRegistro">
+                    Registrarse
+                </a>
+
+                <a href="#" class="login-link" id="cerrarSesion" style="display: none;">
+                    Cerrar sesión
                 </a>
             </nav>
 
@@ -83,7 +101,7 @@
                 </p>
 
                 <div class="hero-buttons">
-                    <a href="auth/registro.html" class="btn-primary">
+                    <a href="#" class="btn-primary btn-agendar-cita">
                         Agendar mi consulta
                         <i class="fa-solid fa-arrow-right"></i>
                     </a>
@@ -205,16 +223,16 @@
 
         <!-- LLAMADO A LA ACCIÓN -->
         <section class="appointment-section">
-                <div>
-                    <span class="eyebrow">ESTAMOS PARA AYUDARTE</span>
-                    <h2>Tu cuidado comienza con una consulta.</h2>
-                    <p>Regístrate y solicita tu cita con nuestro equipo.</p>
-                </div>
+            <div>
+                <span class="eyebrow">ESTAMOS PARA AYUDARTE</span>
+                <h2>Tu cuidado comienza con una consulta.</h2>
+                <p>Regístrate y solicita tu cita con nuestro equipo.</p>
+            </div>
 
-                <a href="auth/registro.html" class="btn-light">
-                    Agendar una cita
-                    <i class="fa-solid fa-arrow-right"></i>
-                </a>
+            <a href="#" class="btn-light btn-agendar-cita">
+                Agendar una cita
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
         </section>
 
     </main>

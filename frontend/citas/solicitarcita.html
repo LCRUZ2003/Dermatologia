@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitar cita | DermaVital</title>
+
+    <link rel="stylesheet" href="css/solicitarcita.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <header class="encabezado">
+        <a href="index.html" class="logo">Derma<span>Vital</span></a>
+
+        <nav>
+            <a href="../index.html" class="nav-link">Inicio</a>
+            <a href="indexcitas.html" class="activo">Mi Panel</a>
+            <a href="solicitarcita.html" class="activo">Solicitar cita</a>
+            <a href="miscitas.html">Mis citas</a>
+            <a href="#" id="cerrarSesion">Cerrar sesión</a>
+        </nav>
+    </header>
+
+    <main class="contenedor">
+        <section class="formulario-contenedor">
+
+            <div class="encabezado-formulario">
+                <div class="icono">
+                    <i class="fa-solid fa-calendar-check"></i>
+                </div>
+
+                <h1>Solicitar una cita</h1>
+                <p>Completa los siguientes datos para solicitar tu cita médica.</p>
+            </div>
+
+            <form id="formularioCita">
+
+                <div class="grupo">
+                    <label for="id_dermatologo">Dermatólogo</label>
+
+                    <select id="id_dermatologo" required>
+                        <option value="">Cargando dermatólogos...</option>
+                    </select>
+                </div>
+
+                <div class="grupo">
+                    <label for="id_servicio">Servicio</label>
+
+                    <select id="id_servicio" required>
+                        <option value="">Cargando servicios...</option>
+                    </select>
+                </div>
+
+                <div class="fila">
+
+                    <div class="grupo">
+                        <label for="fecha_cita">Fecha de la cita</label>
+
+                        <input type="date" id="fecha_cita" required>
+                    </div>
+
+                    <div class="grupo">
+                        <label for="hora_cita">Hora de la cita</label>
+
+                        <select id="hora_cita" required disabled>
+                            <option value="">
+                                Selecciona los datos anteriores
+                            </option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="grupo">
+                    <label for="motivo_consulta">Motivo de consulta</label>
+
+                    <textarea
+                        id="motivo_consulta"
+                        rows="4"
+                        maxlength="500"
+                        placeholder="Describe brevemente el motivo de tu consulta..."
+                    ></textarea>
+                </div>
+
+                <div id="mensaje" class="mensaje"></div>
+
+                <button type="submit" id="btnSolicitar">
+                    <i class="fa-solid fa-calendar-plus"></i>
+                    Solicitar cita
+                </button>
+
+                <a href="index.html" class="volver">
+                    Volver al inicio
+                </a>
+
+            </form>
+        </section>
+    </main>
+
+    <script src="js/solicitacita.js"></script>
+
+</body>
+</html>

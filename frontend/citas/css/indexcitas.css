@@ -1,0 +1,292 @@
+
+:root {
+    --fondo: #F9FAFB;
+    --grafito: #1F2937;
+    --verde: #0D9488;
+    --verde-oscuro: #0F766E;
+    --verde-suave: #CCFBF1;
+    --blanco: #FFFFFF;
+    --gris: #6B7280;
+    --borde: #E5E7EB;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: var(--fondo);
+    color: var(--grafito);
+}
+
+/* ENCABEZADO */
+
+.encabezado {
+    background: var(--blanco);
+    height: 75px;
+    padding: 0 8%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--borde);
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+    color: var(--grafito);
+    text-decoration: none;
+}
+
+.logo span {
+    color: var(--verde);
+}
+
+.encabezado nav {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.encabezado nav a {
+    text-decoration: none;
+    color: var(--grafito);
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.encabezado nav a:hover,
+.encabezado nav a.activo {
+    color: var(--verde);
+}
+
+/* CONTENEDOR */
+
+.contenedor {
+    width: 84%;
+    max-width: 1200px;
+    margin: 45px auto;
+}
+
+/* BIENVENIDA */
+
+.bienvenida {
+    background: var(--verde-suave);
+    border-radius: 18px;
+    padding: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.texto-bienvenida {
+    max-width: 650px;
+}
+
+.etiqueta {
+    color: var(--verde-oscuro);
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.texto-bienvenida h1 {
+    font-size: 36px;
+    margin: 18px 0;
+}
+
+.texto-bienvenida p {
+    color: #475569;
+    line-height: 1.7;
+    margin-bottom: 25px;
+}
+
+.btn-principal {
+    display: inline-block;
+    background: var(--verde);
+    color: var(--blanco);
+    padding: 13px 22px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-principal:hover {
+    background: var(--verde-oscuro);
+}
+
+.imagen-bienvenida {
+    width: 180px;
+    height: 180px;
+    min-width: 180px;
+    background: var(--blanco);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--verde);
+    font-size: 75px;
+}
+
+/* OPCIONES */
+
+.seccion-opciones {
+    margin-top: 55px;
+}
+
+.titulo-seccion {
+    margin-bottom: 25px;
+}
+
+.titulo-seccion h2 {
+    font-size: 25px;
+    margin-bottom: 8px;
+}
+
+.titulo-seccion p {
+    color: var(--gris);
+}
+
+.tarjetas-opciones {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+.tarjeta {
+    background: var(--blanco);
+    border: 1px solid var(--borde);
+    border-radius: 14px;
+    padding: 30px;
+    text-decoration: none;
+    color: var(--grafito);
+    transition: 0.3s;
+}
+
+.tarjeta:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+}
+
+.tarjeta .icono {
+    width: 55px;
+    height: 55px;
+    background: var(--verde-suave);
+    color: var(--verde);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 23px;
+    margin-bottom: 20px;
+}
+
+.tarjeta h3 {
+    font-size: 20px;
+    margin-bottom: 12px;
+}
+
+.tarjeta p {
+    color: var(--gris);
+    line-height: 1.6;
+    margin-bottom: 22px;
+}
+
+.tarjeta span {
+    color: var(--verde);
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* INFORMACIÓN */
+
+.informacion {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: var(--blanco);
+    border: 1px solid var(--borde);
+    border-radius: 14px;
+    padding: 25px;
+    margin-top: 35px;
+}
+
+.icono-informacion {
+    width: 50px;
+    height: 50px;
+    background: var(--verde-suave);
+    color: var(--verde);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.informacion h3 {
+    margin-bottom: 7px;
+}
+
+.informacion p {
+    color: var(--gris);
+    line-height: 1.5;
+}
+
+/* PIE DE PÁGINA */
+
+.footer {
+    text-align: center;
+    padding: 25px;
+    color: var(--gris);
+    font-size: 13px;
+    border-top: 1px solid var(--borde);
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+
+    .encabezado {
+        height: auto;
+        padding: 20px 5%;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .encabezado nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .contenedor {
+        width: 92%;
+    }
+
+    .bienvenida {
+        padding: 30px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .texto-bienvenida h1 {
+        font-size: 28px;
+    }
+
+    .imagen-bienvenida {
+        width: 120px;
+        height: 120px;
+        min-width: 120px;
+        font-size: 50px;
+        align-self: center;
+    }
+
+    .tarjetas-opciones {
+        grid-template-columns: 1fr;
+    }
+}

@@ -123,18 +123,13 @@ CREATE TABLE horarios (
 
 CREATE TABLE IF NOT EXISTS citas (
     id_cita INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-
     id_usuario INTEGER NOT NULL,
     id_dermatologo INTEGER NOT NULL,
     id_servicio INTEGER NOT NULL,
-
     fecha_cita DATE NOT NULL,
     hora_cita TIME NOT NULL,
-
     estado_cita VARCHAR(20) NOT NULL DEFAULT 'PENDIENTE',
-
     motivo_consulta TEXT,
-
     fecha_registro TIMESTAMP WITH TIME ZONE
         DEFAULT CURRENT_TIMESTAMP,
 

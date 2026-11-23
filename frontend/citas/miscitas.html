@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis citas | DermaVital</title>
+
+    <link rel="stylesheet" href="css/miscitas.css">
+    <link rel="stylesheet" href="../css/principal.css">
+<link rel="stylesheet" href="css/indexcitas.css">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- BARRA SUPERIOR -->
+<div class="top-strip">
+    <div class="top-strip-content">
+        <div class="top-strip-left">
+            <span><i class="fa-solid fa-phone"></i> +1 (809) 555-0194</span>
+            <span><i class="fa-solid fa-envelope"></i> info@dermavital.com.do</span>
+        </div>
+
+        <span>
+            <i class="fa-regular fa-clock"></i>
+            Lun - Sáb: 8:00 AM - 6:00 PM
+        </span>
+    </div>
+</div>
+
+<!-- ENCABEZADO -->
+<header class="header">
+    <div class="navbar">
+
+        <a href="../index.html" class="logo">
+            <img src="../assets/img/logo.png" alt="DermaVital">
+        </a>
+
+        <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <nav class="nav-menu" id="navMenu">
+            <a href="../index.html" class="nav-link">Inicio</a>
+            <a href="indexcitas.html" class="nav-link">Mi panel</a>
+            <a href="solicitarcita.html" class="nav-link">Solicitar cita</a>
+            <a href="miscitas.html" class="nav-link">Mis citas</a>
+            <a href="#" class="login-link" id="cerrarSesion">
+                Cerrar sesión
+            </a>
+        </nav>
+
+    </div>
+</header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="contenedor">
+
+        <section class="seccion-citas">
+
+            <!-- TÍTULO -->
+            <div class="encabezado-seccion">
+
+                <div class="icono">
+                    <i class="fa-solid fa-calendar-check"></i>
+                </div>
+
+                <h1>Mis citas</h1>
+
+                <p>
+                    Consulta tus citas médicas y administra tus solicitudes.
+                </p>
+
+            </div>
+
+            <!-- RESUMEN -->
+            <div class="resumen-citas">
+
+                <div class="tarjeta-resumen">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <div>
+                        <span>Total de citas</span>
+                        <h2 id="totalCitas">0</h2>
+                    </div>
+                </div>
+
+                <div class="tarjeta-resumen">
+                    <i class="fa-solid fa-clock"></i>
+                    <div>
+                        <span>Pendientes</span>
+                        <h2 id="citasPendientes">0</h2>
+                    </div>
+                </div>
+
+                <div class="tarjeta-resumen">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <div>
+                        <span>Confirmadas</span>
+                        <h2 id="citasConfirmadas">0</h2>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- LISTADO DE CITAS -->
+            <div class="contenedor-listado">
+
+                <div class="titulo-listado">
+                    <h2>Historial de citas</h2>
+
+                    <button id="btnActualizar" type="button">
+                        <i class="fa-solid fa-rotate"></i>
+                        Actualizar
+                    </button>
+                </div>
+
+                <div id="mensaje" class="mensaje"></div>
+
+                <div id="listaCitas" class="lista-citas">
+
+                    <div class="cargando">
+                        <i class="fa-solid fa-spinner fa-spin"></i>
+                        Cargando tus citas...
+                    </div>
+
+                </div>
+
+            </div>
+
+            <a href="index.html" class="volver">
+                <i class="fa-solid fa-arrow-left"></i>
+                Volver al inicio
+            </a>
+
+        </section>
+
+    </main>
+
+    <script src="js/miscitas.js"></script>
+
+</body>
+</html>

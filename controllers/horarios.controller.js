@@ -1,5 +1,5 @@
 
-const pool = require("../config/db"); 
+const pool = require("../config/db");
 
 // ========================================
 // REGISTRAR UN HORARIO
@@ -14,12 +14,34 @@ const registrarHorario = async (req, res) => {
 
     if (!id_dermatologo || !dia_semana || !hora_inicio || !hora_fin) {
         return res.status(400).json({
-            mensaje: "Completa todos los campos obligatorios."
+            mensaje: "Completa todos los campos del horario."
+        });
+    }
+
+    const diasPermitidos = [
+        "Lunes",
+        "Martes",
+        "Miercoles",
+        "Jueves",
+        "Viernes",
+        "Sabado",
+        "Domingo"
+    ];
+
+    if (!diasPermitidos.includes(dia_semana)) {
+        return res.status(400).json({
+            mensaje: "El día de la semana no es válido."
+        });
+    }
+
+    if (hora_fin <= hora_inicio) {
+        return res.status(400).json({
+            mensaje: "La hora de finalización debe ser posterior a la hora de inicio."
         });
     }
 
     try {
-        // Comprobar que el dermatólogo exista
+        // Verificar que el dermatólogo exista
         const dermatologo = await pool.query(
             `SELECT id_dermatologo
              FROM dermatologos
@@ -29,35 +51,47 @@ const registrarHorario = async (req, res) => {
 
         if (dermatologo.rows.length === 0) {
             return res.status(404).json({
-                mensaje: "El dermatólogo seleccionado no existe."
+                mensaje: "El dermatólogo no existe."
             });
         }
 
-        // Comprobar que no exista un horario superpuesto
-        const conflicto = await pool.query(
-            `SELECT id_horario
-             FROM horarios
-             WHERE id_dermatologo = $1
-             AND dia_semana = $2
-             AND estado = TRUE
-             AND hora_inicio < $4
-             AND hora_fin > $3`,
-            [id_dermatologo, dia_semana, hora_inicio, hora_fin]
-        );
+        // Verificar que no exista otro horario que se cruce
+        const conflicto = await pool.query(`
+            SELECT id_horario
+            FROM horarios
+            WHERE id_dermatologo = $1
+            AND dia_semana = $2
+            AND estado = TRUE
+            AND hora_inicio < $4::TIME
+            AND hora_fin > $3::TIME
+        `, [
+            id_dermatologo,
+            dia_semana,
+            hora_inicio,
+            hora_fin
+        ]);
 
         if (conflicto.rows.length > 0) {
             return res.status(409).json({
-                mensaje: "El dermatólogo ya tiene un horario registrado en ese intervalo."
+                mensaje: "El horario se cruza con otro horario registrado."
             });
         }
 
-        const resultado = await pool.query(
-            `INSERT INTO horarios
-            (id_dermatologo, dia_semana, hora_inicio, hora_fin)
+        const resultado = await pool.query(`
+            INSERT INTO horarios (
+                id_dermatologo,
+                dia_semana,
+                hora_inicio,
+                hora_fin
+            )
             VALUES ($1, $2, $3, $4)
-            RETURNING *`,
-            [id_dermatologo, dia_semana, hora_inicio, hora_fin]
-        );
+            RETURNING *
+        `, [
+            id_dermatologo,
+            dia_semana,
+            hora_inicio,
+            hora_fin
+        ]);
 
         res.status(201).json({
             mensaje: "Horario registrado correctamente.",
@@ -66,18 +100,6 @@ const registrarHorario = async (req, res) => {
 
     } catch (error) {
         console.error("Error al registrar horario:", error.message);
-
-        if (error.code === "23503") {
-            return res.status(400).json({
-                mensaje: "El dermatólogo seleccionado no existe."
-            });
-        }
-
-        if (error.code === "23514") {
-            return res.status(400).json({
-                mensaje: "El día o las horas proporcionadas no son válidos."
-            });
-        }
 
         res.status(500).json({
             mensaje: "Error al registrar el horario."
@@ -99,7 +121,11 @@ const obtenerHorarios = async (req, res) => {
             FROM horarios h
             INNER JOIN dermatologos d
                 ON h.id_dermatologo = d.id_dermatologo
-            ORDER BY h.id_dermatologo, h.dia_semana, h.hora_inicio
+            ORDER BY
+                d.nombres,
+                d.apellidos,
+                h.dia_semana,
+                h.hora_inicio
         `);
 
         res.json(resultado.rows);
@@ -130,6 +156,7 @@ const obtenerHorariosPorDermatologo = async (req, res) => {
             INNER JOIN dermatologos d
                 ON h.id_dermatologo = d.id_dermatologo
             WHERE h.id_dermatologo = $1
+            AND h.estado = TRUE
             ORDER BY h.dia_semana, h.hora_inicio
         `, [id]);
 
@@ -160,46 +187,101 @@ const actualizarHorario = async (req, res) => {
 
     if (!id_dermatologo || !dia_semana || !hora_inicio || !hora_fin) {
         return res.status(400).json({
-            mensaje: "Completa todos los campos obligatorios."
+            mensaje: "Completa todos los campos del horario."
+        });
+    }
+
+    const diasPermitidos = [
+        "Lunes",
+        "Martes",
+        "Miercoles",
+        "Jueves",
+        "Viernes",
+        "Sabado",
+        "Domingo"
+    ];
+
+    if (!diasPermitidos.includes(dia_semana)) {
+        return res.status(400).json({
+            mensaje: "El día de la semana no es válido."
+        });
+    }
+
+    if (hora_fin <= hora_inicio) {
+        return res.status(400).json({
+            mensaje: "La hora de finalización debe ser posterior a la hora de inicio."
         });
     }
 
     try {
-        // Comprobar que no exista un horario superpuesto
-        const conflicto = await pool.query(
+        // Verificar que el horario exista
+        const horario = await pool.query(
             `SELECT id_horario
              FROM horarios
-             WHERE id_dermatologo = $1
-             AND dia_semana = $2
-             AND estado = TRUE
-             AND id_horario <> $5
-             AND hora_inicio < $4
-             AND hora_fin > $3`,
-            [id_dermatologo, dia_semana, hora_inicio, hora_fin, id]
+             WHERE id_horario = $1`,
+            [id]
         );
+
+        if (horario.rows.length === 0) {
+            return res.status(404).json({
+                mensaje: "El horario no existe."
+            });
+        }
+
+        // Verificar que el dermatólogo exista
+        const dermatologo = await pool.query(
+            `SELECT id_dermatologo
+             FROM dermatologos
+             WHERE id_dermatologo = $1`,
+            [id_dermatologo]
+        );
+
+        if (dermatologo.rows.length === 0) {
+            return res.status(404).json({
+                mensaje: "El dermatólogo no existe."
+            });
+        }
+
+        // Verificar que no se cruce con otro horario
+        const conflicto = await pool.query(`
+            SELECT id_horario
+            FROM horarios
+            WHERE id_dermatologo = $1
+            AND dia_semana = $2
+            AND estado = TRUE
+            AND id_horario <> $5
+            AND hora_inicio < $4::TIME
+            AND hora_fin > $3::TIME
+        `, [
+            id_dermatologo,
+            dia_semana,
+            hora_inicio,
+            hora_fin,
+            id
+        ]);
 
         if (conflicto.rows.length > 0) {
             return res.status(409).json({
-                mensaje: "El dermatólogo ya tiene otro horario en ese intervalo."
+                mensaje: "El horario se cruza con otro horario registrado."
             });
         }
 
-        const resultado = await pool.query(
-            `UPDATE horarios
-             SET id_dermatologo = $1,
-                 dia_semana = $2,
-                 hora_inicio = $3,
-                 hora_fin = $4
-             WHERE id_horario = $5
-             RETURNING *`,
-            [id_dermatologo, dia_semana, hora_inicio, hora_fin, id]
-        );
-
-        if (resultado.rows.length === 0) {
-            return res.status(404).json({
-                mensaje: "Horario no encontrado."
-            });
-        }
+        const resultado = await pool.query(`
+            UPDATE horarios
+            SET
+                id_dermatologo = $1,
+                dia_semana = $2,
+                hora_inicio = $3,
+                hora_fin = $4
+            WHERE id_horario = $5
+            RETURNING *
+        `, [
+            id_dermatologo,
+            dia_semana,
+            hora_inicio,
+            hora_fin,
+            id
+        ]);
 
         res.json({
             mensaje: "Horario actualizado correctamente.",
@@ -208,18 +290,6 @@ const actualizarHorario = async (req, res) => {
 
     } catch (error) {
         console.error("Error al actualizar horario:", error.message);
-
-        if (error.code === "23503") {
-            return res.status(400).json({
-                mensaje: "El dermatólogo seleccionado no existe."
-            });
-        }
-
-        if (error.code === "23514") {
-            return res.status(400).json({
-                mensaje: "El día o las horas proporcionadas no son válidos."
-            });
-        }
 
         res.status(500).json({
             mensaje: "Error al actualizar el horario."
@@ -235,17 +305,17 @@ const desactivarHorario = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const resultado = await pool.query(
-            `UPDATE horarios
-             SET estado = FALSE
-             WHERE id_horario = $1
-             RETURNING *`,
-            [id]
-        );
+        const resultado = await pool.query(`
+            UPDATE horarios
+            SET estado = FALSE
+            WHERE id_horario = $1
+            AND estado = TRUE
+            RETURNING *
+        `, [id]);
 
         if (resultado.rows.length === 0) {
             return res.status(404).json({
-                mensaje: "Horario no encontrado."
+                mensaje: "El horario no existe o ya está desactivado."
             });
         }
 
@@ -264,6 +334,9 @@ const desactivarHorario = async (req, res) => {
 };
 
 
+// ========================================
+// EXPORTAR FUNCIONES
+// ========================================
 module.exports = {
     registrarHorario,
     obtenerHorarios,

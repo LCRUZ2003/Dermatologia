@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel del cliente | DermaVital</title>
+
+    <link rel="stylesheet" href="css/miscitas.css">
+    <link rel="stylesheet" href="../css/principal.css">
+<link rel="stylesheet" href="css/indexcitas.css">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- BARRA SUPERIOR -->
+<div class="top-strip">
+    <div class="top-strip-content">
+        <div class="top-strip-left">
+            <span><i class="fa-solid fa-phone"></i> +1 (809) 555-0194</span>
+            <span><i class="fa-solid fa-envelope"></i> info@dermavital.com.do</span>
+        </div>
+
+        <span>
+            <i class="fa-regular fa-clock"></i>
+            Lun - Sáb: 8:00 AM - 6:00 PM
+        </span>
+    </div>
+</div>
+
+<!-- ENCABEZADO -->
+<header class="header">
+    <div class="navbar">
+
+        <a href="../index.html" class="logo">
+            <img src="../assets/img/logo.png" alt="DermaVital">
+        </a>
+
+        <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <nav class="nav-menu" id="navMenu">
+            <a href="../index.html" class="nav-link">Inicio</a>
+            <a href="indexcitas.html" class="nav-link">Mi panel</a>
+            <a href="solicitarcita.html" class="nav-link">Solicitar cita</a>
+            <a href="miscitas.html" class="nav-link">Mis citas</a>
+            <a href="#" class="login-link" id="cerrarSesion">
+                Cerrar sesión
+            </a>
+        </nav>
+
+    </div>
+</header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="contenedor">
+
+        <!-- BIENVENIDA -->
+        <section class="bienvenida">
+
+            <div class="texto-bienvenida">
+
+                <span class="etiqueta">ÁREA DEL CLIENTE</span>
+
+                <h1>
+                    ¡Bienvenido a DermaVital!
+                </h1>
+
+                <p>
+                    Nos alegra tenerte aquí. Desde este espacio puedes
+                    gestionar tus citas médicas y mantenerte al día
+                    con tus consultas dermatológicas.
+                </p>
+
+                <a href="solicitarcita.html" class="btn-principal">
+                    <i class="fa-solid fa-calendar-plus"></i>
+                    Solicitar una cita
+                </a>
+
+            </div>
+
+            <div class="imagen-bienvenida">
+                <i class="fa-solid fa-user-doctor"></i>
+            </div>
+
+        </section>
+
+        <!-- OPCIONES DEL CLIENTE -->
+        <section class="seccion-opciones">
+
+            <div class="titulo-seccion">
+                <h2>¿Qué deseas hacer?</h2>
+
+                <p>
+                    Selecciona una de las siguientes opciones para continuar.
+                </p>
+            </div>
+
+            <div class="tarjetas-opciones">
+
+                <!-- SOLICITAR CITA -->
+                <a href="solicitarcita.html" class="tarjeta">
+
+                    <div class="icono">
+                        <i class="fa-solid fa-calendar-plus"></i>
+                    </div>
+
+                    <h3>Solicitar cita</h3>
+
+                    <p>
+                        Agenda una nueva consulta con nuestros dermatólogos.
+                    </p>
+
+                    <span>
+                        Solicitar ahora
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </span>
+
+                </a>
+
+                <!-- MIS CITAS -->
+                <a href="miscitas.html" class="tarjeta">
+
+                    <div class="icono">
+                        <i class="fa-solid fa-calendar-check"></i>
+                    </div>
+
+                    <h3>Mis citas</h3>
+
+                    <p>
+                        Consulta tus citas registradas y revisa su estado.
+                    </p>
+
+                    <span>
+                        Ver mis citas
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </span>
+
+                </a>
+
+            </div>
+
+        </section>
+
+        <!-- INFORMACIÓN -->
+        <section class="informacion">
+
+            <div class="icono-informacion">
+                <i class="fa-solid fa-heart"></i>
+            </div>
+
+            <div>
+                <h3>Tu salud es nuestra prioridad</h3>
+
+                <p>
+                    En DermaVital trabajamos para ofrecerte
+                    una atención dermatológica de calidad.
+                </p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- PIE DE PÁGINA -->
+    <footer class="footer">
+
+        <p>
+            © 2026 DermaVital. Todos los derechos reservados.
+        </p>
+
+    </footer>
+
+    <script src="js/indexcitas.js"></script>
+
+</body>
+</html>

@@ -39,7 +39,7 @@ const app = express();
 // Configuración de CORS
 app.use(cors({
     origin: "http://127.0.0.1:5500",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
@@ -61,6 +61,7 @@ app.use("/api/servicios", serviciosRoutes);
 
 // Rutas de horarios
 app.use("/api/horarios", horariosRoutes);
+// app.use("/api/horarios", require("./routes/horarios.routes"));
 
 // Rutas administrativas
 app.use("/api/admin/citas", citasAdminRoutes);
