@@ -1,6 +1,6 @@
 
 document.addEventListener("DOMContentLoaded", () => {
-
+ 
     // Abrir y cerrar el menú lateral en dispositivos pequeños
     const menuToggle = document.getElementById("menuToggle");
     const sidebar = document.getElementById("sidebar");

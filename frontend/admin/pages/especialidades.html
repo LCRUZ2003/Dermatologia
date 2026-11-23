@@ -1,1 +1,294 @@
-<h1>Hola Mundo</h1>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Especialidades | Dermavital</title>
+
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/especialidades.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- MENÚ LATERAL -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="sidebar-brand">
+            <img src="../../assets/img/logo.png" alt="Dermavital">
+            <span>ADMINISTRACIÓN</span>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <p class="nav-label">MENÚ PRINCIPAL</p>
+
+            <a href="../index.html" class="nav-item">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="citas.html" class="nav-item">
+                <i class="fa-solid fa-calendar-check"></i>
+                <span>Gestión de citas</span>
+            </a>
+
+            <p class="nav-label">GESTIÓN</p>
+
+            <a href="dermatologos.html" class="nav-item">
+                <i class="fa-solid fa-user-doctor"></i>
+                <span>Dermatólogos</span>
+            </a>
+
+            <a href="especialidades.html" class="nav-item active">
+                <i class="fa-solid fa-stethoscope"></i>
+                <span>Especialidades</span>
+            </a>
+
+            <a href="servicios.html" class="nav-item">
+                <i class="fa-solid fa-hand-holding-medical"></i>
+                <span>Servicios</span>
+            </a>
+
+            <a href="horarios.html" class="nav-item">
+                <i class="fa-solid fa-clock"></i>
+                <span>Horarios</span>
+            </a>
+
+            <p class="nav-label">INFORMACIÓN</p>
+
+            <a href="reportes.html" class="nav-item">
+                <i class="fa-solid fa-file-pdf"></i>
+                <span>Reportes</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+            <a href="../../index.html" class="nav-item">
+                <i class="fa-solid fa-house"></i>
+                <span>Ir al sitio web</span>
+            </a>
+        </div>
+
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <h2>Especialidades</h2>
+                <p>Administra las áreas de atención dermatológica</p>
+            </div>
+
+            <div class="admin-profile">
+                <div class="profile-icon">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+
+                <div>
+                    <strong>Administrador</strong>
+                    <small>Panel administrativo</small>
+                </div>
+            </div>
+        </header>
+
+        <section class="page-content">
+
+            <!-- BANNER -->
+            <div class="page-banner">
+                <div>
+                    <h2>Gestión de especialidades</h2>
+                    <p>Organiza las diferentes áreas de especialización de los profesionales de Dermavital.</p>
+                </div>
+
+                <i class="fas fa-stethoscope"></i>
+            </div>
+
+            <!-- ESTADÍSTICAS -->
+            <div class="section-heading">
+                <div>
+                    <h3>Resumen de especialidades</h3>
+                    <p>Estado actual de las especialidades registradas</p>
+                </div>
+            </div>
+
+            <div class="specialty-stats">
+
+                <div class="stat-card">
+                    <div class="stat-icon total">
+                        <i class="fas fa-list"></i>
+                    </div>
+                    <div>
+                        <span>Total de especialidades</span>
+                        <h3 id="totalEspecialidades">0</h3>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon completed">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div>
+                        <span>Especialidades activas</span>
+                        <h3 id="especialidadesActivas">0</h3>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon pending">
+                        <i class="fas fa-ban"></i>
+                    </div>
+                    <div>
+                        <span>Especialidades inactivas</span>
+                        <h3 id="especialidadesInactivas">0</h3>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- LISTADO -->
+            <section class="specialties-section">
+
+                <div class="specialties-heading">
+
+                    <div class="section-heading">
+                        <div>
+                            <h3>Especialidades registradas</h3>
+                            <p>Consulta y administra las áreas de especialización</p>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" id="btnNuevaEspecialidad">
+                        <i class="fas fa-plus"></i>
+                        Nueva especialidad
+                    </button>
+
+                </div>
+
+                <!-- FILTROS -->
+                <div class="specialty-filters">
+
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input
+                            type="text"
+                            id="buscarEspecialidad"
+                            placeholder="Buscar especialidad..."
+                        >
+                    </div>
+
+                    <select id="filtroEstado">
+                        <option value="">Todos los estados</option>
+                        <option value="activo">Activas</option>
+                        <option value="inactivo">Inactivas</option>
+                    </select>
+
+                </div>
+
+                <!-- TABLA -->
+                <div class="table-container">
+
+                    <table class="specialties-table">
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Especialidad</th>
+                                <th>Descripción</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tablaEspecialidades">
+                            <tr>
+                                <td colspan="5" class="loading-message">
+                                    Cargando especialidades...
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <div class="table-footer">
+                    <span id="contadorEspecialidades">Mostrando 0 especialidades</span>
+                </div>
+
+            </section>
+
+        </section>
+
+    </main>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modalEspecialidad">
+
+        <div class="specialty-modal">
+
+            <div class="modal-header">
+                <div>
+                    <h3 id="tituloModal">Nueva especialidad</h3>
+                    <p>Completa la información de la especialidad</p>
+                </div>
+
+                <button type="button" class="btn-cerrar" id="cerrarModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="formEspecialidad">
+
+                <input type="hidden" id="idEspecialidad">
+
+                <div class="form-group">
+                    <label for="nombreEspecialidad">Nombre de la especialidad</label>
+                    <input
+                        type="text"
+                        id="nombreEspecialidad"
+                        required
+                        maxlength="100"
+                        placeholder="Ej. Dermatología pediátrica"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="descripcionEspecialidad">Descripción</label>
+                    <textarea
+                        id="descripcionEspecialidad"
+                        rows="4"
+                        placeholder="Describe brevemente esta especialidad..."
+                    ></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="cancelarModal">
+                        Cancelar
+                    </button>
+
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i>
+                        Guardar especialidad
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <script src="../js/especialidades.js"></script>
+
+</body>
+</html>

@@ -1,1 +1,192 @@
-<h1>Hola Mundo</h1>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horarios | Dermavital</title>
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/horarios.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+        <img src="../../assets/img/logo.png" alt="Dermavital">
+        <span>ADMINISTRACIÓN</span>
+    </div>
+    <nav class="sidebar-nav">
+        <p class="nav-label">MENÚ PRINCIPAL</p>
+        <a href="../index.html" class="nav-item"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
+        <a href="citas.html" class="nav-item"><i class="fa-solid fa-calendar-check"></i><span>Gestión de citas</span></a>
+        <p class="nav-label">GESTIÓN</p>
+        <a href="dermatologos.html" class="nav-item"><i class="fa-solid fa-user-doctor"></i><span>Dermatólogos</span></a>
+        <a href="especialidades.html" class="nav-item"><i class="fa-solid fa-stethoscope"></i><span>Especialidades</span></a>
+        <a href="servicios.html" class="nav-item"><i class="fa-solid fa-hand-holding-medical"></i><span>Servicios</span></a>
+        <a href="horarios.html" class="nav-item active"><i class="fa-solid fa-clock"></i><span>Horarios</span></a>
+        <p class="nav-label">INFORMACIÓN</p>
+        <a href="reportes.html" class="nav-item"><i class="fa-solid fa-file-pdf"></i><span>Reportes</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+        <a href="../../index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Ir al sitio web</span></a>
+    </div>
+</aside>
+
+<main class="main-content">
+    <header class="topbar">
+        <div>
+            <h2>Horarios</h2>
+            <p>Administra la disponibilidad de los dermatólogos</p>
+        </div>
+        <div class="admin-profile">
+            <div class="profile-icon"><i class="fas fa-user-shield"></i></div>
+            <div><strong>Administrador</strong><small>Panel administrativo</small></div>
+        </div>
+    </header>
+
+    <section class="page-content">
+        <div class="page-banner">
+            <div>
+                <h2>Gestión de horarios</h2>
+                <p>Organiza los días y las horas de atención de cada profesional.</p>
+            </div>
+            <i class="fas fa-clock"></i>
+        </div>
+
+        <div class="section-heading">
+            <h3>Resumen de horarios</h3>
+            <p>Disponibilidad registrada en la clínica</p>
+        </div>
+
+        <div class="schedule-stats">
+            <div class="stat-card">
+                <div class="stat-icon total"><i class="fas fa-calendar-week"></i></div>
+                <div><span>Total de horarios</span><h3 id="totalHorarios">0</h3></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon completed"><i class="fas fa-check-circle"></i></div>
+                <div><span>Horarios activos</span><h3 id="horariosActivos">0</h3></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon pending"><i class="fas fa-ban"></i></div>
+                <div><span>Horarios inactivos</span><h3 id="horariosInactivos">0</h3></div>
+            </div>
+        </div>
+
+        <section class="schedules-section">
+            <div class="schedules-heading">
+                <div class="section-heading">
+                    <div>
+                        <h3>Disponibilidad de los profesionales</h3>
+                        <p>Consulta y administra los horarios de atención</p>
+                    </div>
+                </div>
+                <button class="btn-primary" id="btnNuevoHorario">
+                    <i class="fas fa-plus"></i> Nuevo horario
+                </button>
+            </div>
+
+            <div class="schedule-filters">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="buscarHorario" placeholder="Buscar dermatólogo...">
+                </div>
+                <select id="filtroDia">
+                    <option value="">Todos los días</option>
+                    <option value="Lunes">Lunes</option>
+                    <option value="Martes">Martes</option>
+                    <option value="Miércoles">Miércoles</option>
+                    <option value="Jueves">Jueves</option>
+                    <option value="Viernes">Viernes</option>
+                    <option value="Sábado">Sábado</option>
+                    <option value="Domingo">Domingo</option>
+                </select>
+                <select id="filtroEstado">
+                    <option value="">Todos los estados</option>
+                    <option value="activo">Activos</option>
+                    <option value="inactivo">Inactivos</option>
+                </select>
+            </div>
+
+            <div class="table-container">
+                <table class="schedules-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th><th>Dermatólogo</th><th>Día</th>
+                            <th>Hora de inicio</th><th>Hora de fin</th>
+                            <th>Estado</th><th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaHorarios">
+                        <tr><td colspan="7" class="loading-message">Cargando horarios...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-footer"><span id="contadorHorarios">Mostrando 0 horarios</span></div>
+        </section>
+    </section>
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalHorario">
+    <div class="schedule-modal">
+        <div class="modal-header">
+            <div>
+                <div>
+                    <h3 id="tituloModal">Nuevo horario</h3>
+                    <p>Define la disponibilidad del dermatólogo</p>
+                </div>
+            </div>
+            <button type="button" class="btn-cerrar" id="cerrarModal"><i class="fas fa-times"></i></button>
+        </div>
+
+        <form id="formHorario">
+            <input type="hidden" id="idHorario">
+
+            <div class="form-group">
+                <label for="dermatologoHorario">Dermatólogo</label>
+                <select id="dermatologoHorario" required>
+                    <option value="">Selecciona un profesional</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="diaSemana">Día de la semana</label>
+                <select id="diaSemana" required>
+                    <option value="">Selecciona un día</option>
+                    <option value="Lunes">Lunes</option>
+                    <option value="Martes">Martes</option>
+                    <option value="Miércoles">Miércoles</option>
+                    <option value="Jueves">Jueves</option>
+                    <option value="Viernes">Viernes</option>
+                    <option value="Sábado">Sábado</option>
+                    <option value="Domingo">Domingo</option>
+                </select>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="horaInicio">Hora de inicio</label>
+                    <input type="time" id="horaInicio" required>
+                </div>
+                <div class="form-group">
+                    <label for="horaFin">Hora de finalización</label>
+                    <input type="time" id="horaFin" required>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" id="cancelarModal">Cancelar</button>
+                <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Guardar horario</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="../js/horarios.js"></script>
+</body>
+</html>

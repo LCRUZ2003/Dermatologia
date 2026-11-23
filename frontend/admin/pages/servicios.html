@@ -1,1 +1,168 @@
-<h1>Hola Mundo</h1>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicios | Dermavital</title>
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/servicios.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+        <img src="../../assets/img/logo.png" alt="Dermavital">
+        <span>ADMINISTRACIÓN</span>
+    </div>
+    <nav class="sidebar-nav">
+        <p class="nav-label">MENÚ PRINCIPAL</p>
+        <a href="../index.html" class="nav-item"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
+        <a href="citas.html" class="nav-item"><i class="fa-solid fa-calendar-check"></i><span>Gestión de citas</span></a>
+        <p class="nav-label">GESTIÓN</p>
+        <a href="dermatologos.html" class="nav-item"><i class="fa-solid fa-user-doctor"></i><span>Dermatólogos</span></a>
+        <a href="especialidades.html" class="nav-item"><i class="fa-solid fa-stethoscope"></i><span>Especialidades</span></a>
+        <a href="servicios.html" class="nav-item active"><i class="fa-solid fa-hand-holding-medical"></i><span>Servicios</span></a>
+        <a href="horarios.html" class="nav-item"><i class="fa-solid fa-clock"></i><span>Horarios</span></a>
+        <p class="nav-label">INFORMACIÓN</p>
+        <a href="reportes.html" class="nav-item"><i class="fa-solid fa-file-pdf"></i><span>Reportes</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+        <a href="../../index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Ir al sitio web</span></a>
+    </div>
+</aside>
+
+<main class="main-content">
+    <header class="topbar">
+        <div>
+            <h2>Servicios</h2>
+            <p>Administra los tratamientos y servicios de la clínica</p>
+        </div>
+        <div class="admin-profile">
+            <div class="profile-icon"><i class="fas fa-user-shield"></i></div>
+            <div><strong>Administrador</strong><small>Panel administrativo</small></div>
+        </div>
+    </header>
+
+    <section class="page-content">
+        <div class="page-banner">
+            <div>
+                <h2>Gestión de servicios</h2>
+                <p>Administra los tratamientos, precios y duración de los servicios de Dermavital.</p>
+            </div>
+            <i class="fas fa-hand-holding-medical"></i>
+        </div>
+
+        <div class="section-heading">
+            <h3>Resumen de servicios</h3>
+            <p>Estado actual del catálogo de servicios</p>
+        </div>
+
+        <div class="service-stats">
+            <div class="stat-card">
+                <div class="stat-icon total"><i class="fas fa-list"></i></div>
+                <div><span>Total de servicios</span><h3 id="totalServicios">0</h3></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon completed"><i class="fas fa-check-circle"></i></div>
+                <div><span>Servicios activos</span><h3 id="serviciosActivos">0</h3></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon pending"><i class="fas fa-ban"></i></div>
+                <div><span>Servicios inactivos</span><h3 id="serviciosInactivos">0</h3></div>
+            </div>
+        </div>
+
+        <section class="services-section">
+            <div class="services-heading">
+                <div class="section-heading">
+                    <div>
+                        <h3>Catálogo de servicios</h3>
+                        <p>Consulta y administra los servicios disponibles</p>
+                    </div>
+                </div>
+                <button class="btn-primary" id="btnNuevoServicio">
+                    <i class="fas fa-plus"></i> Nuevo servicio
+                </button>
+            </div>
+
+            <div class="service-filters">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="buscarServicio" placeholder="Buscar servicio...">
+                </div>
+                <select id="filtroEstado">
+                    <option value="">Todos los estados</option>
+                    <option value="activo">Activos</option>
+                    <option value="inactivo">Inactivos</option>
+                </select>
+            </div>
+
+            <div class="table-container">
+                <table class="services-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th><th>Servicio</th><th>Descripción</th>
+                            <th>Precio</th><th>Duración</th><th>Estado</th><th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaServicios">
+                        <tr><td colspan="7" class="loading-message">Cargando servicios...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-footer"><span id="contadorServicios">Mostrando 0 servicios</span></div>
+        </section>
+    </section>
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalServicio">
+    <div class="service-modal">
+        <div class="modal-header">
+            <div>
+                <h3 id="tituloModal">Nuevo servicio</h3>
+                <p>Completa la información del servicio</p>
+            </div>
+            <button type="button" class="btn-cerrar" id="cerrarModal"><i class="fas fa-times"></i></button>
+        </div>
+
+        <form id="formServicio">
+            <input type="hidden" id="idServicio">
+
+            <div class="form-group">
+                <label for="nombreServicio">Nombre del servicio</label>
+                <input type="text" id="nombreServicio" maxlength="100" required>
+            </div>
+
+            <div class="form-group">
+                <label for="descripcionServicio">Descripción</label>
+                <textarea id="descripcionServicio" rows="3"></textarea>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="precioServicio">Precio (RD$)</label>
+                    <input type="number" id="precioServicio" min="0.01" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="duracionServicio">Duración (minutos)</label>
+                    <input type="number" id="duracionServicio" min="1" step="1" required>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" id="cancelarModal">Cancelar</button>
+                <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Guardar servicio</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="../js/servicios.js"></script>
+</body>
+</html>
