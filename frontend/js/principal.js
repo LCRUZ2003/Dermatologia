@@ -130,9 +130,13 @@ document.addEventListener("DOMContentLoaded", () => {
     // 5. AGENDAR CITA
     // ========================================
 
+    // ========================================
+    // 5. AGENDAR CITA
+    // ========================================
+
     document.querySelectorAll(".btn-agendar-cita").forEach(boton => {
 
-        boton.addEventListener("click", (e) => {
+        boton.addEventListener("click", (e) => { 
 
             e.preventDefault();
 
@@ -148,9 +152,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.error("Error leyendo usuario:", error);
             }
 
-            if (tokenActual && usuarioActual?.codigo_rol === "CLIENTE") {
+            const rolActual = usuarioActual?.codigo_rol;
 
-                window.location.href = "solicitarcita.html";
+            if (tokenActual && (rolActual === "CLIENTE" || rolActual === "CLIE")) {
+
+                window.location.href = "citas/solicitarcita.html";
 
             } else if (tokenActual) {
 

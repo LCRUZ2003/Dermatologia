@@ -7,7 +7,8 @@ const {
     obtenerHorarios,
     obtenerHorariosPorDermatologo,
     actualizarHorario,
-    desactivarHorario
+    desactivarHorario,
+    cambiarEstadoHorario
 } = require("../controllers/horarios.controller");
 
 // POST: Registrar horario
@@ -24,5 +25,7 @@ router.put("/:id", actualizarHorario);
 
 // DELETE: Desactivar horario
 router.delete("/:id", desactivarHorario);
+
+router.patch("/:id/estado", cambiarEstadoHorario);
 
 module.exports = router;

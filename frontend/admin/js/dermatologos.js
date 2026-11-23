@@ -1,41 +1,14 @@
 
 // =====================================
 // DERMATÓLOGOS - DERMAVITAL
+// Conectado a PostgreSQL
 // =====================================
 
-// Datos temporales de demostración
-let dermatologos = [
-    {
-        id: 1,
-        nombres: "Laura",
-        apellidos: "Rodríguez",
-        cedula: "047-1234567-8",
-        correo: "laura.rodriguez@gmail.com",
-        telefono: "809-555-1234",
-        descripcion: "Especialista en dermatología general.",
-        estado: true
-    },
-    {
-        id: 2,
-        nombres: "María",
-        apellidos: "Fernández",
-        cedula: "047-2345678-9",
-        correo: "maria.fernandez@gmail.com",
-        telefono: "829-555-2345",
-        descripcion: "Especialista en dermatología estética.",
-        estado: true
-    },
-    {
-        id: 3,
-        nombres: "Carlos",
-        apellidos: "Méndez",
-        cedula: "047-3456789-0",
-        correo: "carlos.mendez@gmail.com",
-        telefono: "849-555-3456",
-        descripcion: "Especialista en tratamientos dermatológicos.",
-        estado: false
-    }
-];
+const API = "/api/dermatologos";
+const API_ESPECIALIDADES = "/api/especialidades";
+
+let dermatologos = [];
+let listaEspecialidades = [];
 
 // =====================================
 // ELEMENTOS DEL DOM
@@ -52,8 +25,35 @@ const btnNuevo = document.getElementById("btnNuevoDermatologo");
 const btnCerrar = document.getElementById("cerrarModal");
 const btnCancelar = document.getElementById("cancelarModal");
 
+const selectEspecialidades = document.getElementById("especialidades");
+
 // =====================================
-// ESCAPAR TEXTO PARA MOSTRARLO EN HTML
+// PETICIONES A LA API
+// =====================================
+
+async function realizarPeticion(url, opciones = {}) {
+    const token = localStorage.getItem("token");
+
+    const respuesta = await fetch(url, {
+        ...opciones,
+        headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            ...opciones.headers
+        }
+    });
+
+    const datos = await respuesta.json().catch(() => ({}));
+
+    if (!respuesta.ok) {
+        throw new Error(datos.mensaje || "Ocurrió un error en la solicitud.");
+    }
+
+    return datos;
+}
+
+// =====================================
+// ESCAPAR TEXTO PARA MOSTRAR EN HTML
 // =====================================
 
 function escaparHTML(valor) {
@@ -67,13 +67,84 @@ function escaparHTML(valor) {
 }
 
 // =====================================
+// CARGAR ESPECIALIDADES
+// =====================================
+
+async function cargarEspecialidades() {
+    try {
+        const datos = await realizarPeticion(API_ESPECIALIDADES);
+
+        listaEspecialidades = Array.isArray(datos)
+            ? datos
+            : datos.especialidades || [];
+
+        selectEspecialidades.innerHTML = "";
+
+        const disponibles = listaEspecialidades.filter(e => e.estado !== false);
+
+        disponibles.forEach(especialidad => {
+            const opcion = document.createElement("option");
+
+            opcion.value = especialidad.id_especialidad;
+            opcion.textContent = especialidad.nombre;
+
+            selectEspecialidades.appendChild(opcion);
+        });
+
+        if (disponibles.length === 0) {
+            selectEspecialidades.innerHTML =
+                '<option value="">No hay especialidades disponibles</option>';
+        }
+
+    } catch (error) {
+        console.error("Error al cargar especialidades:", error);
+        alert("No se pudieron cargar las especialidades.");
+    }
+}
+
+// =====================================
+// CARGAR DERMATÓLOGOS
+// =====================================
+
+async function cargarDermatologos() {
+    try {
+        tablaDermatologos.innerHTML = `
+            <tr>
+                <td colspan="7" class="loading-message">
+                    Cargando dermatólogos...
+                </td>
+            </tr>
+        `;
+
+        const datos = await realizarPeticion(API);
+
+        dermatologos = Array.isArray(datos)
+            ? datos
+            : datos.dermatologos || [];
+
+        actualizarEstadisticas();
+        filtrarDermatologos();
+
+    } catch (error) {
+        console.error("Error al cargar dermatólogos:", error);
+
+        tablaDermatologos.innerHTML = `
+            <tr>
+                <td colspan="7" class="empty-message">
+                    No se pudieron cargar los dermatólogos.
+                </td>
+            </tr>
+        `;
+    }
+}
+
+// =====================================
 // ACTUALIZAR ESTADÍSTICAS
 // =====================================
 
 function actualizarEstadisticas() {
-
-    const activos = dermatologos.filter(d => d.estado).length;
-    const inactivos = dermatologos.filter(d => !d.estado).length;
+    const activos = dermatologos.filter(d => d.estado === true).length;
+    const inactivos = dermatologos.filter(d => d.estado === false).length;
 
     document.getElementById("totalDermatologos").textContent =
         dermatologos.length;
@@ -90,11 +161,9 @@ function actualizarEstadisticas() {
 // =====================================
 
 function mostrarDermatologos(lista = dermatologos) {
-
     tablaDermatologos.innerHTML = "";
 
     if (lista.length === 0) {
-
         tablaDermatologos.innerHTML = `
             <tr>
                 <td colspan="7" class="empty-message">
@@ -110,14 +179,13 @@ function mostrarDermatologos(lista = dermatologos) {
     }
 
     lista.forEach(doctor => {
-
         const fila = document.createElement("tr");
 
         const nombreCompleto =
             `${doctor.nombres} ${doctor.apellidos}`;
 
         fila.innerHTML = `
-            <td>#${doctor.id}</td>
+            <td>#${doctor.id_dermatologo}</td>
 
             <td>
                 <span class="doctor-name">
@@ -149,14 +217,14 @@ function mostrarDermatologos(lista = dermatologos) {
                     <button class="btn-action btn-edit"
                         title="Editar"
                         data-accion="editar"
-                        data-id="${doctor.id}">
+                        data-id="${doctor.id_dermatologo}">
                         <i class="fas fa-pen"></i>
                     </button>
 
                     <button class="btn-action btn-toggle"
                         title="${doctor.estado ? "Desactivar" : "Activar"}"
                         data-accion="estado"
-                        data-id="${doctor.id}">
+                        data-id="${doctor.id_dermatologo}">
                         <i class="fas ${
                             doctor.estado ? "fa-user-slash" : "fa-user-check"
                         }"></i>
@@ -180,23 +248,21 @@ function mostrarDermatologos(lista = dermatologos) {
 // =====================================
 
 function filtrarDermatologos() {
-
     const texto = buscarDermatologo.value.toLowerCase().trim();
     const estado = filtroEstado.value;
 
     const resultado = dermatologos.filter(doctor => {
-
         const nombre =
             `${doctor.nombres} ${doctor.apellidos}`.toLowerCase();
 
         const coincideTexto =
             nombre.includes(texto) ||
-            doctor.cedula.toLowerCase().includes(texto);
+            String(doctor.cedula || "").toLowerCase().includes(texto);
 
         const coincideEstado =
             estado === "" ||
-            (estado === "activo" && doctor.estado) ||
-            (estado === "inactivo" && !doctor.estado);
+            (estado === "activo" && doctor.estado === true) ||
+            (estado === "inactivo" && doctor.estado === false);
 
         return coincideTexto && coincideEstado;
     });
@@ -209,13 +275,16 @@ function filtrarDermatologos() {
 // =====================================
 
 function abrirModal() {
-
     formulario.reset();
 
     document.getElementById("idDermatologo").value = "";
 
     document.getElementById("tituloModal").textContent =
         "Nuevo dermatólogo";
+
+    Array.from(selectEspecialidades.options).forEach(opcion => {
+        opcion.selected = false;
+    });
 
     modal.classList.add("show");
 }
@@ -233,35 +302,56 @@ function cerrarModal() {
 // EDITAR DERMATÓLOGO
 // =====================================
 
-function editarDermatologo(id) {
+async function editarDermatologo(id) {
+    try {
+        const doctor = await realizarPeticion(`${API}/${id}`);
 
-    const doctor = dermatologos.find(d => d.id === id);
+        document.getElementById("idDermatologo").value =
+            doctor.id_dermatologo;
 
-    if (!doctor) return;
+        document.getElementById("nombres").value = doctor.nombres;
+        document.getElementById("apellidos").value = doctor.apellidos;
+        document.getElementById("cedula").value = doctor.cedula;
+        document.getElementById("correo").value = doctor.correo;
+        document.getElementById("telefono").value = doctor.telefono || "";
+        document.getElementById("descripcion").value = doctor.descripcion || "";
 
-    document.getElementById("idDermatologo").value = doctor.id;
-    document.getElementById("nombres").value = doctor.nombres;
-    document.getElementById("apellidos").value = doctor.apellidos;
-    document.getElementById("cedula").value = doctor.cedula;
-    document.getElementById("correo").value = doctor.correo;
-    document.getElementById("telefono").value = doctor.telefono;
-    document.getElementById("descripcion").value = doctor.descripcion;
+        const idsEspecialidades = (doctor.especialidades || [])
+            .map(e => String(e.id_especialidad));
 
-    document.getElementById("tituloModal").textContent =
-        "Editar dermatólogo";
+        Array.from(selectEspecialidades.options).forEach(opcion => {
+            opcion.selected = idsEspecialidades.includes(opcion.value);
+        });
 
-    modal.classList.add("show");
+        document.getElementById("tituloModal").textContent =
+            "Editar dermatólogo";
+
+        modal.classList.add("show");
+
+    } catch (error) {
+        console.error("Error al consultar dermatólogo:", error);
+        alert(error.message);
+    }
 }
 
 // =====================================
 // GUARDAR DERMATÓLOGO
 // =====================================
 
-formulario.addEventListener("submit", function(evento) {
-
+formulario.addEventListener("submit", async function(evento) {
     evento.preventDefault();
 
     const id = document.getElementById("idDermatologo").value;
+
+    const especialidadesSeleccionadas =
+        Array.from(selectEspecialidades.selectedOptions)
+            .map(opcion => Number(opcion.value))
+            .filter(Number.isInteger);
+
+    if (especialidadesSeleccionadas.length === 0) {
+        alert("Debes seleccionar al menos una especialidad.");
+        return;
+    }
 
     const datos = {
         nombres: document.getElementById("nombres").value.trim(),
@@ -269,64 +359,45 @@ formulario.addEventListener("submit", function(evento) {
         cedula: document.getElementById("cedula").value.trim(),
         correo: document.getElementById("correo").value.trim(),
         telefono: document.getElementById("telefono").value.trim(),
-        descripcion: document.getElementById("descripcion").value.trim()
+        descripcion: document.getElementById("descripcion").value.trim(),
+        especialidades: especialidadesSeleccionadas
     };
 
-    // Validar cédula duplicada
-    const cedulaExiste = dermatologos.some(doctor =>
-        doctor.cedula === datos.cedula &&
-        doctor.id !== Number(id)
-    );
+    try {
+        if (id) {
+            await realizarPeticion(`${API}/${id}`, {
+                method: "PUT",
+                body: JSON.stringify(datos)
+            });
 
-    if (cedulaExiste) {
-        alert("Ya existe un dermatólogo registrado con esa cédula.");
-        return;
+            alert("Dermatólogo actualizado correctamente.");
+
+        } else {
+            await realizarPeticion(API, {
+                method: "POST",
+                body: JSON.stringify(datos)
+            });
+
+            alert("Dermatólogo registrado correctamente.");
+        }
+
+        cerrarModal();
+        await cargarDermatologos();
+
+    } catch (error) {
+        console.error("Error al guardar dermatólogo:", error);
+        alert(error.message);
     }
-
-    // Editar profesional existente
-    if (id) {
-
-        const indice = dermatologos.findIndex(
-            doctor => doctor.id === Number(id)
-        );
-
-        if (indice === -1) return;
-
-        dermatologos[indice] = {
-            ...dermatologos[indice],
-            ...datos
-        };
-
-        alert("Información actualizada correctamente (modo demostración).");
-
-    } else {
-
-        // Registrar nuevo profesional
-        const nuevoDermatologo = {
-            id: dermatologos.length
-                ? Math.max(...dermatologos.map(d => d.id)) + 1
-                : 1,
-            ...datos,
-            estado: true
-        };
-
-        dermatologos.push(nuevoDermatologo);
-
-        alert("Dermatólogo registrado correctamente (modo demostración).");
-    }
-
-    cerrarModal();
-    actualizarEstadisticas();
-    filtrarDermatologos();
 });
 
 // =====================================
 // ACTIVAR O DESACTIVAR
 // =====================================
 
-function cambiarEstadoDermatologo(id) {
-
-    const doctor = dermatologos.find(d => d.id === id);
+async function cambiarEstadoDermatologo(id) {
+    const doctor = dermatologos.find(
+        d => Number(d.id_dermatologo) === Number(id)
+    );
 
     if (!doctor) return;
 
@@ -338,16 +409,18 @@ function cambiarEstadoDermatologo(id) {
 
     if (!confirm(mensaje)) return;
 
-    doctor.estado = nuevoEstado;
+    try {
+        const respuesta = await realizarPeticion(`${API}/${id}/estado`, {
+            method: "PATCH"
+        });
 
-    actualizarEstadisticas();
-    filtrarDermatologos();
+        alert(respuesta.mensaje);
+        await cargarDermatologos();
 
-    alert(
-        nuevoEstado
-            ? "Dermatólogo activado correctamente (modo demostración)."
-            : "Dermatólogo desactivado correctamente (modo demostración)."
-    );
+    } catch (error) {
+        console.error("Error al cambiar estado:", error);
+        alert(error.message);
+    }
 }
 
 // =====================================
@@ -355,7 +428,6 @@ function cambiarEstadoDermatologo(id) {
 // =====================================
 
 tablaDermatologos.addEventListener("click", function(evento) {
-
     const boton = evento.target.closest("button[data-accion]");
 
     if (!boton) return;
@@ -373,7 +445,7 @@ tablaDermatologos.addEventListener("click", function(evento) {
 });
 
 // =====================================
-// EVENTOS DE LOS BOTONES Y FILTROS
+// EVENTOS DE BOTONES Y FILTROS
 // =====================================
 
 btnNuevo.addEventListener("click", abrirModal);
@@ -384,7 +456,6 @@ btnCancelar.addEventListener("click", cerrarModal);
 buscarDermatologo.addEventListener("input", filtrarDermatologos);
 filtroEstado.addEventListener("change", filtrarDermatologos);
 
-// Cerrar modal al hacer clic fuera de él
 modal.addEventListener("click", function(evento) {
     if (evento.target === modal) {
         cerrarModal();
@@ -395,5 +466,9 @@ modal.addEventListener("click", function(evento) {
 // INICIALIZAR MÓDULO
 // =====================================
 
-actualizarEstadisticas();
-mostrarDermatologos();
+async function inicializarModulo() {
+    await cargarEspecialidades();
+    await cargarDermatologos();
+}
+
+inicializarModulo();

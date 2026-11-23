@@ -529,7 +529,7 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.removeItem("token");
         localStorage.removeItem("usuario");
 
-        window.location.href = "index.html";
+        window.location.href = "../index.html";
     });
 
     // ========================================

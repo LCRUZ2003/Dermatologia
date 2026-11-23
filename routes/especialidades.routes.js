@@ -7,22 +7,26 @@ const {
     obtenerEspecialidades,
     obtenerEspecialidadPorId,
     actualizarEspecialidad,
-    desactivarEspecialidad
+    desactivarEspecialidad,
+    cambiarEstadoEspecialidad
 } = require("../controllers/especialidades.controller");
 
-// POST: Registrar especialidad
+// Registrar especialidad
 router.post("/", registrarEspecialidad);
 
-// GET: Consultar todas
+// Consultar todas las especialidades
 router.get("/", obtenerEspecialidades);
 
-// GET: Consultar por ID
+// Consultar una especialidad
 router.get("/:id", obtenerEspecialidadPorId);
 
-// PUT: Actualizar especialidad
+// Actualizar especialidad
 router.put("/:id", actualizarEspecialidad);
 
-// DELETE: Desactivar especialidad
+// Desactivar especialidad
 router.delete("/:id", desactivarEspecialidad);
+
+// Activar o desactivar especialidad
+router.patch("/:id/estado", cambiarEstadoEspecialidad);
 
 module.exports = router;

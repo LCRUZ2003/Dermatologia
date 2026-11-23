@@ -180,11 +180,48 @@ const desactivarEspecialidad = async (req, res) => {
     }
 };
 
+// ========================================
+// ACTIVAR O DESACTIVAR UNA ESPECIALIDAD
+// ========================================
+const cambiarEstadoEspecialidad = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const resultado = await pool.query(
+            `UPDATE especialidades
+             SET estado = NOT estado
+             WHERE id_especialidad = $1
+             RETURNING *`,
+            [id]
+        );
+
+        if (resultado.rows.length === 0) {
+            return res.status(404).json({
+                mensaje: "Especialidad no encontrada."
+            });
+        }
+
+        res.json({
+            mensaje: resultado.rows[0].estado
+                ? "Especialidad activada correctamente."
+                : "Especialidad desactivada correctamente.",
+            especialidad: resultado.rows[0]
+        });
+
+    } catch (error) {
+        console.error("Error al cambiar estado:", error.message);
+
+        res.status(500).json({
+            mensaje: "Error al cambiar el estado de la especialidad."
+        });
+    }
+};
 
 module.exports = {
     registrarEspecialidad,
     obtenerEspecialidades,
     obtenerEspecialidadPorId,
     actualizarEspecialidad,
-    desactivarEspecialidad
+    desactivarEspecialidad,
+    cambiarEstadoEspecialidad
 };

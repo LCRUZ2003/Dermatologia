@@ -3,66 +3,14 @@
 // GESTIÓN DE CITAS - DERMAVITAL
 // =====================================
 
-// Datos temporales para diseñar y probar la interfaz.
-// Posteriormente serán sustituidos por los datos de PostgreSQL.
+// Dirección de la API
+const API_CITAS = "/api/admin/citas";
 
-let citas = [
-    {
-        id: 1,
-        paciente: "Ana Martínez",
-        correo: "ana@gmail.com",
-        dermatologo: "Laura Rodríguez",
-        servicio: "Dermatología General",
-        fecha: "2026-11-23",
-        hora: "09:00",
-        estado: "PENDIENTE",
-        motivo: "Consulta dermatológica"
-    },
-    {
-        id: 2,
-        paciente: "Carlos Pérez",
-        correo: "carlos@gmail.com",
-        dermatologo: "María Fernández",
-        servicio: "Tratamiento facial",
-        fecha: "2026-11-23",
-        hora: "10:30",
-        estado: "CONFIRMADA",
-        motivo: "Evaluación de la piel"
-    },
-    {
-        id: 3,
-        paciente: "Sofía Gómez",
-        correo: "sofia@gmail.com",
-        dermatologo: "Laura Rodríguez",
-        servicio: "Tratamiento láser",
-        fecha: "2026-11-24",
-        hora: "11:00",
-        estado: "COMPLETADA",
-        motivo: "Tratamiento de manchas"
-    },
-    {
-        id: 4,
-        paciente: "Pedro Sánchez",
-        correo: "pedro@gmail.com",
-        dermatologo: "María Fernández",
-        servicio: "Skincare",
-        fecha: "2026-11-24",
-        hora: "14:00",
-        estado: "CANCELADA",
-        motivo: "Consulta de cuidado facial"
-    },
-    {
-        id: 5,
-        paciente: "Lucía Ramírez",
-        correo: "lucia@gmail.com",
-        dermatologo: "Laura Rodríguez",
-        servicio: "Dermatología General",
-        fecha: "2026-11-25",
-        hora: "08:30",
-        estado: "PENDIENTE",
-        motivo: "Revisión dermatológica"
-    }
-];
+// Obtener token de autenticación
+const token = localStorage.getItem("token");
+
+// Almacenar las citas provenientes de PostgreSQL
+let citas = [];
 
 // =====================================
 // ELEMENTOS DEL DOM
@@ -74,6 +22,70 @@ const filtroEstado = document.getElementById("filtroEstado");
 const filtroFecha = document.getElementById("filtroFecha");
 
 // =====================================
+// FUNCIÓN PARA CONSULTAR LA API
+// =====================================
+
+async function consultarAPI(url, opciones = {}) {
+
+    const respuesta = await fetch(url, {
+        ...opciones,
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+            ...opciones.headers
+        }
+    });
+
+    const datos = await respuesta.json().catch(() => ({}));
+
+    if (!respuesta.ok) {
+        throw new Error(datos.mensaje || "No fue posible completar la operación.");
+    }
+
+    return datos;
+}
+
+// =====================================
+// CARGAR CITAS DESDE POSTGRESQL
+// =====================================
+
+async function cargarCitas() {
+
+    if (!token) {
+        alert("Debes iniciar sesión como administrador.");
+        return;
+    }
+
+    try {
+
+        tablaCitas.innerHTML = `
+            <tr>
+                <td colspan="8" class="empty-message">
+                    Cargando citas...
+                </td>
+            </tr>
+        `;
+
+        citas = await consultarAPI(API_CITAS);
+
+        actualizarEstadisticas();
+        filtrarCitas();
+
+    } catch (error) {
+
+        console.error("Error al cargar citas:", error);
+
+        tablaCitas.innerHTML = `
+            <tr>
+                <td colspan="8" class="empty-message">
+                    ${escaparHTML(error.message)}
+                </td>
+            </tr>
+        `;
+    }
+}
+
+// =====================================
 // ACTUALIZAR ESTADÍSTICAS
 // =====================================
 
@@ -82,13 +94,13 @@ function actualizarEstadisticas() {
     document.getElementById("totalCitas").textContent = citas.length;
 
     document.getElementById("citasPendientes").textContent =
-        citas.filter(cita => cita.estado === "PENDIENTE").length;
+        citas.filter(cita => cita.estado_cita === "PENDIENTE").length;
 
     document.getElementById("citasConfirmadas").textContent =
-        citas.filter(cita => cita.estado === "CONFIRMADA").length;
+        citas.filter(cita => cita.estado_cita === "CONFIRMADA").length;
 
     document.getElementById("citasCompletadas").textContent =
-        citas.filter(cita => cita.estado === "COMPLETADA").length;
+        citas.filter(cita => cita.estado_cita === "COMPLETADA").length;
 }
 
 // =====================================
@@ -105,6 +117,51 @@ function obtenerClaseEstado(estado) {
     };
 
     return clases[estado] || "";
+}
+
+// =====================================
+// FORMATEAR FECHA
+// =====================================
+
+function formatearFecha(fecha) {
+
+    if (!fecha) return "No disponible";
+
+    const fechaLimpia = String(fecha).split("T")[0];
+    const [anio, mes, dia] = fechaLimpia.split("-");
+
+    return `${dia}/${mes}/${anio}`;
+}
+
+// =====================================
+// FORMATEAR HORA
+// =====================================
+
+function formatearHora(hora) {
+
+    if (!hora) return "No disponible";
+
+    return String(hora).slice(0, 5);
+}
+
+// =====================================
+// ESCAPAR TEXTO HTML
+// =====================================
+
+function escaparHTML(valor) {
+
+    return String(valor ?? "").replace(/[&<>"']/g, caracter => {
+
+        const caracteres = {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;"
+        };
+
+        return caracteres[caracter];
+    });
 }
 
 // =====================================
@@ -135,22 +192,29 @@ function mostrarCitas(lista = citas) {
 
         const fila = document.createElement("tr");
 
+        const paciente = escaparHTML(cita.nombre_usuario);
+        const dermatologo = escaparHTML(
+            `${cita.nombre_dermatologo || ""} ${cita.apellido_dermatologo || ""}`.trim()
+        );
+        const servicio = escaparHTML(cita.nombre_servicio);
+        const estado = escaparHTML(cita.estado_cita);
+
         fila.innerHTML = `
-            <td>#${cita.id}</td>
+            <td>#${cita.id_cita}</td>
 
-            <td>${cita.paciente}</td>
+            <td>${paciente}</td>
 
-            <td>${cita.dermatologo}</td>
+            <td>${dermatologo}</td>
 
-            <td>${cita.servicio}</td>
+            <td>${servicio}</td>
 
-            <td>${formatearFecha(cita.fecha)}</td>
+            <td>${formatearFecha(cita.fecha_cita)}</td>
 
-            <td>${cita.hora}</td>
+            <td>${formatearHora(cita.hora_cita)}</td>
 
             <td>
-                <span class="estado ${obtenerClaseEstado(cita.estado)}">
-                    ${cita.estado}
+                <span class="estado ${obtenerClaseEstado(cita.estado_cita)}">
+                    ${estado}
                 </span>
             </td>
 
@@ -160,25 +224,18 @@ function mostrarCitas(lista = citas) {
                     <button class="btn-accion btn-detalle"
                         title="Ver detalles"
                         data-accion="detalle"
-                        data-id="${cita.id}">
+                        data-id="${cita.id_cita}">
                         <i class="fas fa-eye"></i>
                     </button>
 
                     ${
-                        cita.estado === "PENDIENTE"
+                        cita.estado_cita === "PENDIENTE"
                         ? `
                             <button class="btn-accion btn-confirmar"
                                 title="Confirmar cita"
                                 data-accion="confirmar"
-                                data-id="${cita.id}">
+                                data-id="${cita.id_cita}">
                                 <i class="fas fa-check"></i>
-                            </button>
-
-                            <button class="btn-accion btn-cancelar"
-                                title="Cancelar cita"
-                                data-accion="cancelar"
-                                data-id="${cita.id}">
-                                <i class="fas fa-times"></i>
                             </button>
                         `
                         : ""
@@ -196,17 +253,6 @@ function mostrarCitas(lista = citas) {
 }
 
 // =====================================
-// FORMATEAR FECHA
-// =====================================
-
-function formatearFecha(fecha) {
-
-    const [anio, mes, dia] = fecha.split("-");
-
-    return `${dia}/${mes}/${anio}`;
-}
-
-// =====================================
 // BUSCAR Y FILTRAR CITAS
 // =====================================
 
@@ -218,16 +264,28 @@ function filtrarCitas() {
 
     const resultado = citas.filter(cita => {
 
+        const nombrePaciente = (cita.nombre_usuario || "").toLowerCase();
+
+        const nombreDermatologo =
+            `${cita.nombre_dermatologo || ""} ${cita.apellido_dermatologo || ""}`.toLowerCase();
+
+        const nombreServicio = (cita.nombre_servicio || "").toLowerCase();
+
+        const correo = (cita.correo_usuario || "").toLowerCase();
+
         const coincideTexto =
-            cita.paciente.toLowerCase().includes(texto) ||
-            cita.dermatologo.toLowerCase().includes(texto) ||
-            cita.servicio.toLowerCase().includes(texto);
+            nombrePaciente.includes(texto) ||
+            nombreDermatologo.includes(texto) ||
+            nombreServicio.includes(texto) ||
+            correo.includes(texto);
+
+        const fechaCita = String(cita.fecha_cita || "").split("T")[0];
 
         const coincideEstado =
-            estado === "" || cita.estado === estado;
+            estado === "" || cita.estado_cita === estado;
 
         const coincideFecha =
-            fecha === "" || cita.fecha === fecha;
+            fecha === "" || fechaCita === fecha;
 
         return coincideTexto && coincideEstado && coincideFecha;
     });
@@ -241,20 +299,28 @@ function filtrarCitas() {
 
 function verDetalles(id) {
 
-    const cita = citas.find(c => c.id === id);
+    const cita = citas.find(c => Number(c.id_cita) === id);
 
     if (!cita) return;
 
+    const paciente = cita.nombre_usuario || "No disponible";
+
+    const dermatologo =
+        `${cita.nombre_dermatologo || ""} ${cita.apellido_dermatologo || ""}`.trim();
+
     alert(
         `DETALLES DE LA CITA\n\n` +
-        `Paciente: ${cita.paciente}\n` +
-        `Correo: ${cita.correo}\n` +
-        `Dermatólogo: ${cita.dermatologo}\n` +
-        `Servicio: ${cita.servicio}\n` +
-        `Fecha: ${formatearFecha(cita.fecha)}\n` +
-        `Hora: ${cita.hora}\n` +
-        `Estado: ${cita.estado}\n` +
-        `Motivo: ${cita.motivo}`
+        `Número: #${cita.id_cita}\n` +
+        `Paciente: ${paciente}\n` +
+        `Correo: ${cita.correo_usuario || "No disponible"}\n` +
+        `Dermatólogo: ${dermatologo || "No disponible"}\n` +
+        `Servicio: ${cita.nombre_servicio || "No disponible"}\n` +
+        `Precio: ${cita.precio_servicio ?? "No disponible"}\n` +
+        `Duración: ${cita.duracion_minutos ?? "No disponible"} minutos\n` +
+        `Fecha: ${formatearFecha(cita.fecha_cita)}\n` +
+        `Hora: ${formatearHora(cita.hora_cita)}\n` +
+        `Estado: ${cita.estado_cita}\n` +
+        `Motivo: ${cita.motivo_consulta || "No especificado"}`
     );
 }
 
@@ -262,49 +328,37 @@ function verDetalles(id) {
 // CONFIRMAR CITA
 // =====================================
 
-function confirmarCita(id) {
+async function confirmarCita(id) {
 
-    const cita = citas.find(c => c.id === id);
+    const cita = citas.find(c => Number(c.id_cita) === id);
 
-    if (!cita || cita.estado !== "PENDIENTE") return;
+    if (!cita || cita.estado_cita !== "PENDIENTE") return;
 
     const confirmar = window.confirm(
-        `¿Deseas confirmar la cita de ${cita.paciente}?`
+        `¿Deseas confirmar la cita de ${cita.nombre_usuario}?`
     );
 
-    if (confirmar) {
+    if (!confirmar) return;
 
-        cita.estado = "CONFIRMADA";
+    try {
 
-        actualizarEstadisticas();
-        filtrarCitas();
+        const resultado = await consultarAPI(
+            `${API_CITAS}/${id}/confirmar`,
+            {
+                method: "PATCH"
+            }
+        );
 
-        alert("Cita confirmada correctamente (modo demostración).");
-    }
-}
+        alert(resultado.mensaje || "Cita confirmada correctamente.");
 
-// =====================================
-// CANCELAR CITA
-// =====================================
+        // Volver a consultar los datos actualizados
+        await cargarCitas();
 
-function cancelarCita(id) {
+    } catch (error) {
 
-    const cita = citas.find(c => c.id === id);
+        console.error("Error al confirmar cita:", error);
 
-    if (!cita || cita.estado !== "PENDIENTE") return;
-
-    const cancelar = window.confirm(
-        `¿Deseas cancelar la cita de ${cita.paciente}?`
-    );
-
-    if (cancelar) {
-
-        cita.estado = "CANCELADA";
-
-        actualizarEstadisticas();
-        filtrarCitas();
-
-        alert("Cita cancelada correctamente (modo demostración).");
+        alert(error.message);
     }
 }
 
@@ -336,15 +390,10 @@ tablaCitas.addEventListener("click", function (evento) {
     if (accion === "confirmar") {
         confirmarCita(id);
     }
-
-    if (accion === "cancelar") {
-        cancelarCita(id);
-    }
 });
 
 // =====================================
 // INICIALIZAR PÁGINA
 // =====================================
 
-actualizarEstadisticas();
-mostrarCitas();
+cargarCitas();

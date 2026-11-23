@@ -3,33 +3,9 @@
 // ESPECIALIDADES - DERMAVITAL
 // =====================================
 
-// Datos temporales de demostración
-let especialidades = [
-    {
-        id: 1,
-        nombre: "Dermatología General",
-        descripcion: "Diagnóstico y tratamiento de enfermedades de la piel, cabello y uñas.",
-        estado: true
-    },
-    {
-        id: 2,
-        nombre: "Dermatología Estética",
-        descripcion: "Tratamientos enfocados en mejorar la apariencia y salud de la piel.",
-        estado: true
-    },
-    {
-        id: 3,
-        nombre: "Dermatología Pediátrica",
-        descripcion: "Atención y tratamiento de afecciones dermatológicas en niños.",
-        estado: true
-    },
-    {
-        id: 4,
-        nombre: "Dermatología Clínica",
-        descripcion: "Evaluación y manejo de enfermedades dermatológicas complejas.",
-        estado: false
-    }
-];
+const API = "/api/especialidades";
+
+let especialidades = [];
 
 // =====================================
 // ELEMENTOS DEL DOM
@@ -47,6 +23,35 @@ const btnCerrar = document.getElementById("cerrarModal");
 const btnCancelar = document.getElementById("cancelarModal");
 
 // =====================================
+// CONFIGURACIÓN DE PETICIONES
+// =====================================
+
+function obtenerToken() {
+    return localStorage.getItem("token");
+}
+
+async function realizarPeticion(url, opciones = {}) {
+    const token = obtenerToken();
+
+    const respuesta = await fetch(url, {
+        ...opciones,
+        headers: {
+            ...(opciones.headers || {}),
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+        }
+    });
+
+    const datos = await respuesta.json().catch(() => ({}));
+
+    if (!respuesta.ok) {
+        throw new Error(datos.mensaje || "Ocurrió un error al procesar la solicitud.");
+    }
+
+    return datos;
+}
+
+// =====================================
 // ESCAPAR TEXTO PARA MOSTRAR EN HTML
 // =====================================
 
@@ -61,13 +66,33 @@ function escaparHTML(valor) {
 }
 
 // =====================================
+// CONSULTAR ESPECIALIDADES
+// =====================================
+
+async function cargarEspecialidades() {
+    try {
+        const datos = await realizarPeticion(API);
+
+        especialidades = Array.isArray(datos)
+            ? datos
+            : datos.especialidades || [];
+
+        actualizarEstadisticas();
+        filtrarEspecialidades();
+
+    } catch (error) {
+        console.error("Error al cargar especialidades:", error);
+        alert(error.message);
+    }
+}
+
+// =====================================
 // ACTUALIZAR ESTADÍSTICAS
 // =====================================
 
 function actualizarEstadisticas() {
-
-    const activas = especialidades.filter(e => e.estado).length;
-    const inactivas = especialidades.filter(e => !e.estado).length;
+    const activas = especialidades.filter(e => e.estado === true).length;
+    const inactivas = especialidades.filter(e => e.estado === false).length;
 
     document.getElementById("totalEspecialidades").textContent =
         especialidades.length;
@@ -84,11 +109,9 @@ function actualizarEstadisticas() {
 // =====================================
 
 function mostrarEspecialidades(lista = especialidades) {
-
     tablaEspecialidades.innerHTML = "";
 
     if (lista.length === 0) {
-
         tablaEspecialidades.innerHTML = `
             <tr>
                 <td colspan="5" class="empty-message">
@@ -104,11 +127,10 @@ function mostrarEspecialidades(lista = especialidades) {
     }
 
     lista.forEach(especialidad => {
-
         const fila = document.createElement("tr");
 
         fila.innerHTML = `
-            <td>#${especialidad.id}</td>
+            <td>#${especialidad.id_especialidad}</td>
 
             <td>
                 <span class="specialty-name">
@@ -136,14 +158,14 @@ function mostrarEspecialidades(lista = especialidades) {
                     <button class="btn-action btn-edit"
                         title="Editar"
                         data-accion="editar"
-                        data-id="${especialidad.id}">
+                        data-id="${especialidad.id_especialidad}">
                         <i class="fas fa-pen"></i>
                     </button>
 
                     <button class="btn-action btn-toggle"
                         title="${especialidad.estado ? "Desactivar" : "Activar"}"
                         data-accion="estado"
-                        data-id="${especialidad.id}">
+                        data-id="${especialidad.id_especialidad}">
                         <i class="fas ${
                             especialidad.estado ? "fa-ban" : "fa-check"
                         }"></i>
@@ -167,20 +189,18 @@ function mostrarEspecialidades(lista = especialidades) {
 // =====================================
 
 function filtrarEspecialidades() {
-
     const texto = buscarEspecialidad.value.toLowerCase().trim();
     const estado = filtroEstado.value;
 
     const resultado = especialidades.filter(especialidad => {
-
         const coincideTexto =
             especialidad.nombre.toLowerCase().includes(texto) ||
             (especialidad.descripcion || "").toLowerCase().includes(texto);
 
         const coincideEstado =
             estado === "" ||
-            (estado === "activo" && especialidad.estado) ||
-            (estado === "inactivo" && !especialidad.estado);
+            (estado === "activo" && especialidad.estado === true) ||
+            (estado === "inactivo" && especialidad.estado === false);
 
         return coincideTexto && coincideEstado;
     });
@@ -193,7 +213,6 @@ function filtrarEspecialidades() {
 // =====================================
 
 function abrirModal() {
-
     formulario.reset();
 
     document.getElementById("idEspecialidad").value = "";
@@ -209,7 +228,6 @@ function abrirModal() {
 // =====================================
 
 function cerrarModal() {
-
     modal.classList.remove("show");
     formulario.reset();
 }
@@ -219,19 +237,20 @@ function cerrarModal() {
 // =====================================
 
 function editarEspecialidad(id) {
-
-    const especialidad = especialidades.find(e => e.id === id);
+    const especialidad = especialidades.find(
+        e => e.id_especialidad === id
+    );
 
     if (!especialidad) return;
 
     document.getElementById("idEspecialidad").value =
-        especialidad.id;
+        especialidad.id_especialidad;
 
     document.getElementById("nombreEspecialidad").value =
         especialidad.nombre;
 
     document.getElementById("descripcionEspecialidad").value =
-        especialidad.descripcion;
+        especialidad.descripcion || "";
 
     document.getElementById("tituloModal").textContent =
         "Editar especialidad";
@@ -243,8 +262,7 @@ function editarEspecialidad(id) {
 // GUARDAR ESPECIALIDAD
 // =====================================
 
-formulario.addEventListener("submit", function(evento) {
-
+formulario.addEventListener("submit", async function(evento) {
     evento.preventDefault();
 
     const id = document.getElementById("idEspecialidad").value;
@@ -255,10 +273,14 @@ formulario.addEventListener("submit", function(evento) {
     const descripcion = document.getElementById("descripcionEspecialidad")
         .value.trim();
 
-    // Evitar nombres duplicados
+    if (!nombre) {
+        alert("Debes escribir el nombre de la especialidad.");
+        return;
+    }
+
     const nombreExiste = especialidades.some(especialidad =>
         especialidad.nombre.toLowerCase() === nombre.toLowerCase() &&
-        especialidad.id !== Number(id)
+        especialidad.id_especialidad !== Number(id)
     );
 
     if (nombreExiste) {
@@ -266,52 +288,46 @@ formulario.addEventListener("submit", function(evento) {
         return;
     }
 
-    // Editar especialidad
-    if (id) {
+    const datos = {
+        nombre,
+        descripcion
+    };
 
-        const indice = especialidades.findIndex(
-            especialidad => especialidad.id === Number(id)
-        );
+    try {
+        if (id) {
+            await realizarPeticion(`${API}/${id}`, {
+                method: "PUT",
+                body: JSON.stringify(datos)
+            });
 
-        if (indice === -1) return;
+            alert("Especialidad actualizada correctamente.");
 
-        especialidades[indice] = {
-            ...especialidades[indice],
-            nombre,
-            descripcion
-        };
+        } else {
+            await realizarPeticion(API, {
+                method: "POST",
+                body: JSON.stringify(datos)
+            });
 
-        alert("Especialidad actualizada correctamente (modo demostración).");
+            alert("Especialidad registrada correctamente.");
+        }
 
-    } else {
+        cerrarModal();
+        await cargarEspecialidades();
 
-        // Registrar nueva especialidad
-        const nuevaEspecialidad = {
-            id: especialidades.length
-                ? Math.max(...especialidades.map(e => e.id)) + 1
-                : 1,
-            nombre,
-            descripcion,
-            estado: true
-        };
-
-        especialidades.push(nuevaEspecialidad);
-
-        alert("Especialidad registrada correctamente (modo demostración).");
+    } catch (error) {
+        console.error("Error al guardar especialidad:", error);
+        alert(error.message);
     }
-
-    cerrarModal();
-    actualizarEstadisticas();
-    filtrarEspecialidades();
 });
 
 // =====================================
-// ACTIVAR O DESACTIVAR
+// ACTIVAR O DESACTIVAR ESPECIALIDAD
 // =====================================
 
-function cambiarEstadoEspecialidad(id) {
-
-    const especialidad = especialidades.find(e => e.id === id);
+async function cambiarEstadoEspecialidad(id) {
+    const especialidad = especialidades.find(
+        e => e.id_especialidad === id
+    );
 
     if (!especialidad) return;
 
@@ -323,16 +339,19 @@ function cambiarEstadoEspecialidad(id) {
 
     if (!confirm(mensaje)) return;
 
-    especialidad.estado = nuevoEstado;
+    try {
+        const datos = await realizarPeticion(`${API}/${id}/estado`, {
+            method: "PATCH"
+        });
 
-    actualizarEstadisticas();
-    filtrarEspecialidades();
+        alert(datos.mensaje || "Estado actualizado correctamente.");
 
-    alert(
-        nuevoEstado
-            ? "Especialidad activada correctamente (modo demostración)."
-            : "Especialidad desactivada correctamente (modo demostración)."
-    );
+        await cargarEspecialidades();
+
+    } catch (error) {
+        console.error("Error al cambiar estado:", error);
+        alert(error.message);
+    }
 }
 
 // =====================================
@@ -340,7 +359,6 @@ function cambiarEstadoEspecialidad(id) {
 // =====================================
 
 tablaEspecialidades.addEventListener("click", function(evento) {
-
     const boton = evento.target.closest("button[data-accion]");
 
     if (!boton) return;
@@ -380,5 +398,4 @@ modal.addEventListener("click", function(evento) {
 // INICIALIZAR MÓDULO
 // =====================================
 
-actualizarEstadisticas();
-mostrarEspecialidades();
+cargarEspecialidades();

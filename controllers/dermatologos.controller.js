@@ -286,6 +286,42 @@ const actualizarDermatologo = async (req, res) => {
     }
 };
 
+// ========================================
+// ACTIVAR O DESACTIVAR UN DERMATÓLOGO
+// ========================================
+const cambiarEstadoDermatologo = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const resultado = await pool.query(
+            `UPDATE dermatologos
+             SET estado = NOT estado
+             WHERE id_dermatologo = $1
+             RETURNING *`,
+            [id]
+        );
+
+        if (resultado.rows.length === 0) {
+            return res.status(404).json({
+                mensaje: "Dermatólogo no encontrado."
+            });
+        }
+
+        res.json({
+            mensaje: resultado.rows[0].estado
+                ? "Dermatólogo activado correctamente."
+                : "Dermatólogo desactivado correctamente.",
+            dermatologo: resultado.rows[0]
+        });
+
+    } catch (error) {
+        console.error("Error al cambiar estado:", error.message);
+
+        res.status(500).json({
+            mensaje: "Error al cambiar el estado del dermatólogo."
+        });
+    }
+};
 
 // ========================================
 // ELIMINAR UN DERMATÓLOGO
@@ -326,5 +362,6 @@ module.exports = {
     obtenerDermatologos,
     obtenerDermatologoPorId,
     actualizarDermatologo,
-    eliminarDermatologo
+    eliminarDermatologo,
+    cambiarEstadoDermatologo
 };

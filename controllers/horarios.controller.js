@@ -334,6 +334,40 @@ const desactivarHorario = async (req, res) => {
 };
 
 
+const cambiarEstadoHorario = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const resultado = await pool.query(`
+            UPDATE horarios
+            SET estado = NOT estado
+            WHERE id_horario = $1
+            RETURNING *
+        `, [id]);
+
+        if (resultado.rows.length === 0) {
+            return res.status(404).json({
+                mensaje: "Horario no encontrado."
+            });
+        }
+
+        res.json({
+            mensaje: resultado.rows[0].estado
+                ? "Horario activado correctamente."
+                : "Horario desactivado correctamente.",
+            horario: resultado.rows[0]
+        });
+
+    } catch (error) {
+        console.error("Error al cambiar estado del horario:", error.message);
+
+        res.status(500).json({
+            mensaje: "Error al cambiar el estado del horario."
+        });
+    }
+};
+
+
 // ========================================
 // EXPORTAR FUNCIONES
 // ========================================
@@ -342,5 +376,6 @@ module.exports = {
     obtenerHorarios,
     obtenerHorariosPorDermatologo,
     actualizarHorario,
-    desactivarHorario
+    desactivarHorario,
+    cambiarEstadoHorario
 };

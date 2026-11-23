@@ -106,9 +106,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 const rol = datos.usuario?.codigo_rol;
 
                 if (rol === "ADMIN") {
-                    window.location.href = "../admin/dashboard.html";
-                } else {
+
+                    window.location.href = "/admin/index.html";
+
+                } else if (rol === "CLIENTE" || rol === "CLIE") {
+
                     window.location.href = "../index.html";
+
+                } else {
+
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("usuario");
+
+                    mostrarMensaje("El rol del usuario no es válido.", "error");
                 }
 
             }, 1000);
